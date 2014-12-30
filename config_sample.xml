@@ -1,0 +1,4 @@
+<config identifier="test">
+	<parameter type="static" name="param1" value="1.0"></parameter>
+	<parameter type="changing" name="param2" value="1.0" validity="0-1000"></parameter>
+</config>

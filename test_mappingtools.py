@@ -103,3 +103,43 @@ if __name__ == '__main__':
                                                  number_of_fuzzy_options,
                                                  threshold_fuzziness, True)
             print matching_string + " --> " + best_match
+
+
+    #
+    # TEST 4: find matching tuple
+    #
+    if test_number == "4":
+        input_file_name = args[2]
+
+        mapping = Mapping()
+
+        # first create a reduced string dictionary
+        input_file = open(input_file_name, 'r')
+        # for simplicity every line is a distinct string, but the string array
+        # can really come from anywhere
+        for line in input_file.readlines():
+            mapping.from_strings.append(line.strip().split(";"))  #  append tokens
+        print mapping.from_strings
+#        mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
+
+        print "MappingTools version: " + str(mapping.__version__)
+
+        print "<< RUN1: "
+        number_of_fuzzy_options = 4
+        threshold_fuzziness = 80
+        print "number_of_fuzzy_options: " + str(number_of_fuzzy_options)
+        print "threshold_fuzziness: " + str(threshold_fuzziness)
+
+        matching_tuple = mapping.from_strings[0]
+        best_match = mapping.find_best_match_tuple(
+            matching_tuple,
+            mapping.from_strings,
+            number_of_fuzzy_options,
+            threshold_fuzziness
+        )
+#        for matching_string in mapping.reduced_from_strings:
+#            best_match = mapping.find_best_match(matching_string,
+#                                                 mapping.reduced_from_strings,
+#                                                 number_of_fuzzy_options,
+#                                                 threshold_fuzziness, True)
+        print matching_string + " --> " + best_match

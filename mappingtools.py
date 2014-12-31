@@ -214,6 +214,8 @@ class Mapping(object):
     #   number_of_fuzzy_options,
     #   threshold_fuzziness
     #   )
+    #
+    # TODO: DEFUNCT because fuzzywuzzy does not like tuples
     #-------------------------------------------------------------------------
     def find_best_match_tuple(self,
                         matching_tuple,
@@ -235,42 +237,45 @@ class Mapping(object):
             best_match (str) -- the best match to matching_string in original_strings
 
         Note:
-
+            This method finds an element-wise best match for every element in the tuple and then constructs the overall best match
 
         """
 
         # the possible matches are the original_strings array reduced by the
         # string we are trying to match
-        reduced_original_strings = list(original_strings)
-        reduced_original_strings.remove(matching_string)
+        reduced_original_tuples = list(original_tuples)
+        reduced_original_tuples.remove(matching_tuple)
 
         # find fuzzy matches in the reduced list of all entries
         matching_options = process.extract(
-            matching_string,
-            reduced_original_strings,
+            matching_tuple,
+            reduced_original_tuples,
             limit=number_of_fuzzy_options
         )
 
         # we start with the original string
-        original_frequency = original_strings[matching_string]
+        original_frequency = original_tuples[matching_tuple]
         best_match_precision = 0.0  # original string is not in the reduced list of all entries
-        best_match = matching_string
+        best_match = matching_tuple
 
-        # the best matching option is found by checking fuzziness and relative frequency of all matches
+        # the best matching option is found by checking fuzziness and relative frequency of all matches for every tuple
         for matching_option in matching_options:
-            match_fuzziness = matching_option[1]
-            match_frequency = original_strings[matching_option[0]]
+            for tuple in matching_option:
+                print tuple
+
+#            match_fuzziness = matching_option[1]
+#            match_frequency = original_tuples[matching_option[0]]
 
             # we replace a name with a similar name only if the similar name
             # has a higher frequency; we also check that we only consider
             # reasonable matches, otherwise we might match with a fairly
             # different, but very prominent name
-            matching_precision = match_fuzziness/100.0*match_frequency - original_frequency
+#            matching_precision = match_fuzziness/100.0*match_frequency - original_frequency
 
             # finally, do the comparison by finding best match and checking that fuzziness is above some threshold
-            if matching_precision > best_match_precision and match_fuzziness > threshold_fuzziness:
-                best_match_precision = matching_precision
-                best_match = matching_option[0]
+#            if matching_precision > best_match_precision and match_fuzziness > threshold_fuzziness:
+#                best_match_precision = matching_precision
+#                best_match = matching_option[0]
 
             if debug:  # debug
                 print matching_string, original_frequency, best_match, best_match_precision

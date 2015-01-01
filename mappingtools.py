@@ -6,6 +6,9 @@ __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
 import sys
 import logging
 import re
+
+from math import sqrt
+
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 
@@ -19,9 +22,9 @@ class Mapping(object):
     __version__ = 0.9
 
 
-    #
-    # VARIABLES
-    #
+#
+# VARIABLES
+#
     identifier = ""
     from_strings = []  # contains the raw from_strings
     reduced_from_strings = {}  # contains the reduced from_strings with unique entries and relative frequencies
@@ -33,9 +36,9 @@ class Mapping(object):
     to_string_dict = {}  # contains the reduced to_strings with unique entries and relative frequencies
 
 
-    #
-    #  METHODS
-    #
+#
+#  METHODS
+#
     #-------------------------------------------------------------------------
     #  __init__
     #-------------------------------------------------------------------------
@@ -119,7 +122,8 @@ class Mapping(object):
             reduced_string_dict (dict) -- dict containing unique string as key and frequency as value
 
         Note:
-            Absolute frequency is the number of occurences of a unique string
+            - Absolute frequency is the number of occurences of a unique string
+            - This method takes any hashable object and computes the frequency, including tuples
 
         """
 
@@ -215,12 +219,10 @@ class Mapping(object):
     #   threshold_fuzziness
     #   )
     #
-    # TODO: DEFUNCT because fuzzywuzzy does not like tuples
     #-------------------------------------------------------------------------
     def find_best_match_tuple(self,
                         matching_tuple,
                         original_tuples,
-                        number_of_fuzzy_options,
                         threshold_fuzziness,
                         debug=None
     ):
@@ -228,8 +230,8 @@ class Mapping(object):
         Finds the best match of a string tuple in an array of string tuples
 
         Args:
-            matching_string (str) -- the string that is to be matched
-            original_strings (list) -- the list of strings from which the best match is to be found
+            matching_string (tuple) -- the tuple that is to be matched
+            original_strings (list) -- the list of tuples from which the best match is to be found
             number_of_fuzzy_options (int) -- the number of alternatives of the matching_string fuzzywuzzy should find in the original_strings
             threshold_fuzziness (int) -- the lower threshold for the precision of fuzzy matches
 
@@ -240,45 +242,39 @@ class Mapping(object):
             This method finds an element-wise best match for every element in the tuple and then constructs the overall best match
 
         """
+        best_distance = 100000000.0  # a very large number so it is easy to beat by an entry in the original_tuples
 
         # the possible matches are the original_strings array reduced by the
         # string we are trying to match
         reduced_original_tuples = list(original_tuples)
         reduced_original_tuples.remove(matching_tuple)
 
-        # find fuzzy matches in the reduced list of all entries
-        matching_options = process.extract(
-            matching_tuple,
-            reduced_original_tuples,
-            limit=number_of_fuzzy_options
-        )
+        # loop over all remaining tuples and compute geometric distance
+        for original_tuple in reduced_original_tuples:
+            # make sure each entry has the same length as the matching_tuple
+            if len(matching_tuple) != len(original_tuple):
+                print "<< E: tuple length does not match: ", matching_tuple, original_tuple
+                break
 
-        # we start with the original string
-        original_frequency = original_tuples[matching_tuple]
-        best_match_precision = 0.0  # original string is not in the reduced list of all entries
-        best_match = matching_tuple
+            # compute the frequency of the entire tuple (not the individual entries)
+            entry_frequency = original_tuples[original_tuple]
 
-        # the best matching option is found by checking fuzziness and relative frequency of all matches for every tuple
-        for matching_option in matching_options:
-            for tuple in matching_option:
-                print tuple
+            # go over each entry
+            sum = 0.0  # the string distance between two tuples
+            for i in range(0, len(original_tuple)):
+                # compute the fuzz ratio of each entry
+                entry_fuzz_ratio = fuzz.ratio(matching_tuple[i], original_tuple[i])
+                # fuzzy ratio times entry frequency
+                sum += (100 - entry_fuzz_ratio)*(100 - entry_fuzz_ratio)
 
-#            match_fuzziness = matching_option[1]
-#            match_frequency = original_tuples[matching_option[0]]
+            distance = sqrt(sum)*entry_frequency
 
-            # we replace a name with a similar name only if the similar name
-            # has a higher frequency; we also check that we only consider
-            # reasonable matches, otherwise we might match with a fairly
-            # different, but very prominent name
-#            matching_precision = match_fuzziness/100.0*match_frequency - original_frequency
-
-            # finally, do the comparison by finding best match and checking that fuzziness is above some threshold
-#            if matching_precision > best_match_precision and match_fuzziness > threshold_fuzziness:
-#                best_match_precision = matching_precision
-#                best_match = matching_option[0]
+            if distance < best_distance:  # we have a new best match
+                best_distance = distance
+                best_match = original_tuple
 
             if debug:  # debug
-                print matching_string, original_frequency, best_match, best_match_precision
+                print matching_tuple, original_tuple, entry_frequency, best_match, best_distance
 
-        return best_match
+        return [best_match, best_distance]
     #-------------------------------------------------------------------------

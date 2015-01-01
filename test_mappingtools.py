@@ -88,7 +88,9 @@ if __name__ == '__main__':
             best_match = mapping.find_best_match(matching_string,
                                                  mapping.reduced_from_strings,
                                                  number_of_fuzzy_options,
-                                                 threshold_fuzziness, True)
+                                                 threshold_fuzziness,
+                                                 False
+            )
             print matching_string + " --> " + best_match
 
         print "<< RUN2: "
@@ -101,7 +103,9 @@ if __name__ == '__main__':
             best_match = mapping.find_best_match(matching_string,
                                                  mapping.reduced_from_strings,
                                                  number_of_fuzzy_options,
-                                                 threshold_fuzziness, True)
+                                                 threshold_fuzziness,
+                                                 False
+            )
             print matching_string + " --> " + best_match
 
 
@@ -118,28 +122,22 @@ if __name__ == '__main__':
         # for simplicity every line is a distinct string, but the string array
         # can really come from anywhere
         for line in input_file.readlines():
-            mapping.from_strings.append(line.strip().split(";"))  #  append tokens
-        print mapping.from_strings
-#        mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
+            mapping.from_strings.append(tuple(line.strip().split(";")))  #  append tokens to string list
+
+        mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
 
         print "MappingTools version: " + str(mapping.__version__)
 
         print "<< RUN1: "
-        number_of_fuzzy_options = 4
         threshold_fuzziness = 80
-        print "number_of_fuzzy_options: " + str(number_of_fuzzy_options)
         print "threshold_fuzziness: " + str(threshold_fuzziness)
+        print "reduced tuples: ", mapping.reduced_from_strings
+        for matching_tuple in mapping.reduced_from_strings:
+            [best_match, best_distance] = mapping.find_best_match_tuple(
+                matching_tuple,
+                mapping.reduced_from_strings,  # TODO not a good name as it can also contain tuples
+                threshold_fuzziness,
+                False
+            )
 
-        matching_tuple = mapping.from_strings[0]
-        best_match = mapping.find_best_match_tuple(
-            matching_tuple,
-            mapping.from_strings,
-            number_of_fuzzy_options,
-            threshold_fuzziness
-        )
-#        for matching_string in mapping.reduced_from_strings:
-#            best_match = mapping.find_best_match(matching_string,
-#                                                 mapping.reduced_from_strings,
-#                                                 number_of_fuzzy_options,
-#                                                 threshold_fuzziness, True)
-        print matching_string + " --> " + best_match
+            print matching_tuple, " -->", best_match, "with best_distance:", best_distance

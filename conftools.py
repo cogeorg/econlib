@@ -43,7 +43,10 @@ class Config(object):
         # loop over all entries in the xml file
         for subelement in element:
             name = subelement.attrib['name']
-            value = float(subelement.attrib['value'])
+            try:  # we see whether the value is a float
+                value = float(subelement.attrib['value'])
+            except:  # if not, it is a string
+                value = str(subelement.attrib['value'])
             if (subelement.attrib['type'] == 'static'):
                 self.static_parameters[name] = value
             if (subelement.attrib['type'] == 'changing'):

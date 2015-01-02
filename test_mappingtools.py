@@ -129,15 +129,19 @@ if __name__ == '__main__':
         print "MappingTools version: " + str(mapping.__version__)
 
         print "<< RUN1: "
-        threshold_fuzziness = 80
+        threshold_fuzziness = 80.0
+        matching_scaling_factor = 50.0
         print "threshold_fuzziness: " + str(threshold_fuzziness)
+        print "matching_scaling_factor" + str(matching_scaling_factor)
+
         print "reduced tuples: ", mapping.reduced_from_strings
         for matching_tuple in mapping.reduced_from_strings:
             [best_match, best_distance] = mapping.find_best_match_tuple(
                 matching_tuple,
                 mapping.reduced_from_strings,  # TODO not a good name as it can also contain tuples
                 threshold_fuzziness,
-                False
+                matching_scaling_factor,
+                True
             )
 
             print matching_tuple, " -->", best_match, "with best_distance:", best_distance

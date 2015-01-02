@@ -48,6 +48,28 @@ class Mapping(object):
 
 
     #-------------------------------------------------------------------------
+    #
+    #-------------------------------------------------------------------------
+    def tuple_to_string(self, tuple):
+        """
+        Takes a tuple and transforms it into a string
+
+        Args:
+            tuple (tuple)
+
+        Returns:
+            result (str) -- the string corresponding to the tuple with "_" between two entries of the tuple
+        """
+
+        result = ""
+        for token in tuple:
+            result += token + "_"
+        return result.rstrip("_")
+    #-------------------------------------------------------------------------
+
+
+
+    #-------------------------------------------------------------------------
     # standardize_string(
     #   string,
     #   redundant_strings_file_name
@@ -224,6 +246,7 @@ class Mapping(object):
                         matching_tuple,
                         original_tuples,
                         threshold_fuzziness,
+                        matching_scaling_factor,
                         debug=None
     ):
         """
@@ -242,12 +265,17 @@ class Mapping(object):
             This method finds an element-wise best match for every element in the tuple and then constructs the overall best match
 
         """
-        best_distance = 100000000.0  # a very large number so it is easy to beat by an entry in the original_tuples
+        best_distance = -10000000000.0  # a very large negative number so it is easy to beat by an entry in the original_tuples
 
         # the possible matches are the original_strings array reduced by the
         # string we are trying to match
         reduced_original_tuples = list(original_tuples)
         reduced_original_tuples.remove(matching_tuple)
+
+        matching_frequency = original_tuples[matching_tuple]  # frequency of the matching tuple
+        best_match = matching_tuple  # if we don't find any match, the original token is the best match
+
+        matching_string = self.tuple_to_string(matching_tuple)  # construct a string from a token
 
         # loop over all remaining tuples and compute geometric distance
         for original_tuple in reduced_original_tuples:
@@ -267,14 +295,22 @@ class Mapping(object):
                 # fuzzy ratio times entry frequency
                 sum += (100 - entry_fuzz_ratio)*(100 - entry_fuzz_ratio)
 
-            distance = sqrt(sum)*entry_frequency
+            # the distance is computed as geometric distance of token distances, taking into account relative frequencies
+            # the scaling factor determines the condition when to choose a worse-matching tuple that is much more
+            # frequent
+            distance = matching_scaling_factor*entry_frequency - matching_frequency*sqrt(sum)
 
-            if distance < best_distance:  # we have a new best match
+            # to prevent always going with the most common tuple, we also compute the fuzzy distance between the string
+            # versions of the tuples.
+            original_string = self.tuple_to_string(original_tuple)
+            fuzzy_distance = fuzz.ratio(matching_string, original_string)
+
+            if distance > best_distance and fuzzy_distance > threshold_fuzziness:  # we have a new best match
                 best_distance = distance
                 best_match = original_tuple
 
             if debug:  # debug
-                print matching_tuple, original_tuple, entry_frequency, best_match, best_distance
+                print matching_tuple, original_tuple, matching_frequency, entry_frequency, best_match, best_distance
 
         return [best_match, best_distance]
     #-------------------------------------------------------------------------

@@ -32,7 +32,8 @@ if __name__ == '__main__':
 
         mapping = Mapping()
 
-        standardized_string = mapping.standardize_string(input_string, redundant_strings_file_name)
+        redundant_strings = mapping.read_redundant_strings(redundant_strings_file_name)
+        standardized_string = mapping.standardize_string(input_string, redundant_strings)
 
         print "MappingTools version: " + str(mapping.__version__)
         print input_string + "  -->  " + standardized_string

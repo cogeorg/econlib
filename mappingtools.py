@@ -28,6 +28,7 @@ class Mapping(object):
     identifier = ""
     from_strings = []  # contains the raw from_strings
     reduced_from_strings = {}  # contains the reduced from_strings with unique entries and relative frequencies
+    mapping_original_standardized_from_strings = {}  # contains the original string as key and the corresponding standardized string as value
 
     # NOTE: this variable is not always needed, e.g. when there is only one input file but with multiple
     #       occurences of certain strings. in this case the mapping is not between files, but from the various
@@ -68,6 +69,33 @@ class Mapping(object):
     #-------------------------------------------------------------------------
 
 
+    #-------------------------------------------------------------------------
+    #
+    #-------------------------------------------------------------------------
+    def read_redundant_strings(self, redundant_strings_file_name):
+        """
+        This file reads redundant strings into an array
+
+        Args:
+            redundant_strings_file_name (str)
+
+        Returns:
+            redundant_strings (list)
+        """
+
+        redundant_strings = []
+
+        # read redundant strings from file.
+        redundant_strings_file = open(redundant_strings_file_name, 'r')
+        for line in redundant_strings_file.readlines():
+            redundant_strings.append(line.strip())
+            # we also remove the upper case version of each string
+            redundant_strings.append(line.strip().upper())
+        redundant_strings_file.close()
+
+        return redundant_strings
+    #-------------------------------------------------------------------------
+
 
     #-------------------------------------------------------------------------
     # standardize_string(
@@ -77,7 +105,7 @@ class Mapping(object):
     #-------------------------------------------------------------------------
     def standardize_string(self,
                            original_string,
-                           redundant_strings_file_name
+                           redundant_strings
     ):
         """
         Takes an original string and standardizes it by stripping special characters and redundant strings
@@ -101,22 +129,12 @@ class Mapping(object):
         original_string = original_string.upper().strip()
 
         # special characters should be removed from all strings
-        special_characters = [' ', '/', ',', '\'', '“', '”', '\?', '\.', '\"', '-']
+        special_characters = ['/', ',', '\'', '“', '”', '\?', '\.', '\"', '-']
         for special_character in special_characters:
             original_string = re.sub(special_character, '', original_string)
 
-        # redundant strings are things like 'the', 'of', etc. that can be
-        # stripped because they complicate the matching without carrying too
-        # too much semantic meaning
-        redundant_strings = []
-
-        # read redundant strings from file.
-        redundant_strings_file = open(redundant_strings_file_name, 'r')
-        for line in redundant_strings_file.readlines():
-            redundant_strings.append(line.strip())
-            # we also remove the upper case version of each string
-            redundant_strings.append(line.strip().upper())
-        redundant_strings_file.close()
+        # replace whitespace
+        original_string = re.sub(' ', '_', original_string)
 
         # actually remove redundant strings
         for redundant_string in redundant_strings:

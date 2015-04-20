@@ -123,7 +123,7 @@ if __name__ == '__main__':
         # for simplicity every line is a distinct string, but the string array
         # can really come from anywhere
         for line in input_file.readlines():
-            mapping.from_strings.append(tuple(line.strip().split(";")))  #  append tokens to string list
+            mapping.from_strings.append(tuple(line.strip().split(",")))  #  append tokens to string list
 
         mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
 

@@ -38,11 +38,11 @@ class io(object):
     #-------------------------------------------------------------------------
 def csv_to_dict(filename,
                 key_func,
-                value_func
+                value_func,
                 skip_header = True
     ):
         """
-        Reads a csv as a dictionary, where values and keys are set in a flexible manor
+        Reads a csv as a dictionary, where values and keys are set in a flexible manner. Delimiters are determined automatically.
 
         Args:
             filename (str) -- the name of the source file
@@ -59,9 +59,11 @@ def csv_to_dict(filename,
 
         aDict = {}
         with open(filename, 'r') as f:
-            csvReader = csv.reader(f)
+            dialect = csv.Sniffer().sniff(f.read(1024), delimiters=";,")
+            f.seek(0)
+            csvReader = csv.reader(f, dialect)
             if skip_header:
-                next(csvReader, None) # skip the header
+                next(csvReader, None)
             for row in csvReader:
                 key = key_func(row)
                 aDict[key] = value_func(row)

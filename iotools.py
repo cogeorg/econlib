@@ -29,6 +29,48 @@ class io(object):
     #
 
     #-------------------------------------------------------------------------
+    # csv_to_dict(
+    #    filename,
+    #    key_func,
+    #    value_func,
+    #    skip_header
+    #    )
+    #-------------------------------------------------------------------------
+def csv_to_dict(filename,
+                key_func,
+                value_func
+                skip_header = True
+    ):
+        """
+        Reads a csv as a dictionary, where values and keys are set in a flexible manor
+
+        Args:
+            filename (str) -- the name of the source file
+            key_func (func) -- a function specifying which row(s) of the csv file should be the keys of the dictionary
+            value_func (func) -- a function specifiying which row(s) of the csv file should be the values of the dictionary
+            skip_header (boolean - optional) -- set to False if header should not be skipped
+
+        Returns:
+            aDict (dict) -- the dictionary compiled from the csv file
+
+        """
+
+        import csv
+
+        aDict = {}
+        with open(filename, 'r') as f:
+            csvReader = csv.reader(f)
+            if skip_header:
+                next(csvReader, None) # skip the header
+            for row in csvReader:
+                key = key_func(row)
+                aDict[key] = value_func(row)
+
+        return aDict
+    #-------------------------------------------------------------------------
+
+
+    #-------------------------------------------------------------------------
     # nested_dict_to_csv(
     #    aNestedDict,
     #    FileName,

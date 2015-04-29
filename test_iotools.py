@@ -35,3 +35,32 @@ if __name__ == '__main__':
 
         pprint.pprint(german_peace_nobel_laureates)
 
+    #
+    # TEST 2: output nested dictionary to csv
+    #
+    if test_number == "2":
+        output_name = sys.argv[2]
+
+        print "IOTools version: " + str(iotools.io.__version__)
+        print "Print the following as: " + output_name
+
+        largest_countries_eu = {}
+        largest_countries_eu['Germany'] = {}
+        largest_countries_eu['Germany']['Capital'] = "Berlin"
+        largest_countries_eu['Germany']['Population'] = 81890000
+        largest_countries_eu['France'] = {}
+        largest_countries_eu['France']['Capital'] = "Paris"
+        largest_countries_eu['France']['Population'] = 65697000
+        largest_countries_eu['France']['Language'] = "French"
+        largest_countries_eu['UK'] = {}
+        largest_countries_eu['UK']['Capital'] = "London"
+        largest_countries_eu['UK']['Population'] = 63228000
+        largest_countries_eu['UK']['Seen'] = "yes"
+        largest_countries_eu['Italy'] = {}
+        largest_countries_eu['Italy']['Capital'] = "Rome"
+        largest_countries_eu['Italy']['Population'] = 60918000
+
+        pprint.pprint(largest_countries_eu)
+
+        iotools.nested_dict_to_csv(largest_countries_eu, output_name, "country")
+

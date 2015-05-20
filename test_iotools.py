@@ -36,9 +36,23 @@ if __name__ == '__main__':
         pprint.pprint(german_peace_nobel_laureates)
 
     #
-    # TEST 2: output nested dictionary to csv
+    # TEST 1: read csv to nested dictionary
     #
     if test_number == "2":
+        input_file = sys.argv[2]
+
+        print "IOTools version: " + str(iotools.io.__version__)
+        print "Read " + input_file + " as:"
+
+        german_peace_nobel_laureates_nested = iotools.csv_to_nested_dict(input_file, lambda row: row.pop('year'))
+
+        pprint.pprint(german_peace_nobel_laureates_nested)
+
+
+    #
+    # TEST 2: output nested dictionary to csv
+    #
+    if test_number == "3":
         output_name = sys.argv[2]
 
         print "IOTools version: " + str(iotools.io.__version__)

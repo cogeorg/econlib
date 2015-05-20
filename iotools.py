@@ -22,7 +22,7 @@ if __name__ == '__main__':
 #
 #-------------------------------------------------------------------------
 class io(object):
-    __version__ = 0.1
+    __version__ = 0.2
 
     #
     #  METHODS
@@ -40,7 +40,7 @@ def csv_to_dict(filename,
                 key_func,
                 value_func,
                 skip_header = True
-    ):
+                ):
         """
         Reads a csv as a dictionary, where values and keys are set in a flexible manner. Delimiters are determined automatically.
 
@@ -59,14 +59,51 @@ def csv_to_dict(filename,
 
         aDict = {}
         with open(filename, 'r') as f:
-            dialect = csv.Sniffer().sniff(f.read(1024), delimiters=";,")
+            csvDialect = csv.Sniffer().sniff(f.read(4096))
             f.seek(0)
-            csvReader = csv.reader(f, dialect)
+            csvReader = csv.reader(f, dialect=csvDialect)
             if skip_header:
                 next(csvReader, None)
             for row in csvReader:
                 key = key_func(row)
                 aDict[key] = value_func(row)
+
+        return aDict
+    #-------------------------------------------------------------------------
+
+
+    #-------------------------------------------------------------------------
+    # csv_to_nested_dict(
+    #    filename,
+    #    key_func,
+    #    skip_header
+    #    )
+    #-------------------------------------------------------------------------
+def csv_to_nested_dict(filename,
+                       key_func):
+        """
+        Reads a csv as a dictionary of dictionaries, where keys are set in a flexible manner. Delimiters are determined automatically.
+
+        Args:
+            filename (str) -- the name of the source file
+            key_func (func) -- a function specifying which row(s) of the csv file should be the keys of the dictionary
+            skip_header (boolean - optional) -- set to False if header should not be skipped
+
+        Returns:
+            aDict (dict) -- the nested dictionary compiled from the csv file
+
+        """
+
+        import csv
+
+        aDict = {}
+        with open(filename, 'r') as f:
+            csvDialect = csv.Sniffer().sniff(f.read(4096))
+            f.seek(0)
+            csvReader = csv.DictReader(f, dialect=csvDialect)
+            for row in csvReader:
+                key = key_func(row)
+                aDict[key] = row
 
         return aDict
     #-------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = """Michael Rose (michael.q.rose@gmail.com)"""
+__author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 
 #-------------------------------------------------------------------------
 #
@@ -84,7 +84,7 @@ def nested_dict_to_csv(aNestedDict,
                        FirstFieldName = ""
     ):
         """
-        Takes an dictionary of dictionatires and outputs it as csv with keys as rownames and subkeys as column names
+        Takes an dictionary of dictionaries and outputs it as csv with keys as rownames and subkeys as column names
 
         Args:
             aNestedDict (dict) -- a dictionary of dictionaries

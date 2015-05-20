@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = """Michael Rose (Michael.Q.Rose@gmail.com)"""
+__author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 
 #-------------------------------------------------------------------------
 #

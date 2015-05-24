@@ -133,7 +133,8 @@ def csv_to_nested_dict(filename,
 def nested_dict_to_csv(aNestedDict,
                        FileName,
                        FirstFieldName = "",
-                       write_header = True):
+                       write_header = True,
+                       SubKeys = None):
         """
         Takes an dictionary of dictionaries and outputs it as csv with keys as rownames and subkeys as column names
 
@@ -143,13 +144,15 @@ def nested_dict_to_csv(aNestedDict,
             FirstFieldName (str - optional) -- the name of the first column (ie the name for the keys - if none is given,
                                                the field is empty)
             write_header (boolean - optional) -- set to False if header should not be written
+            SubKeys (list of strings - optional) -- pass to control in which order the subkeys are printed
 
         """
 
         import csv
 
         # get unique names of all subkeys
-        SubKeys = list({subkey for key in aNestedDict.values() for subkey in key})
+        if SubKeys == None:
+            SubKeys = list({subkey for key in aNestedDict.values() for subkey in key})
 
         # create proper list of field names
         

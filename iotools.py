@@ -3,11 +3,25 @@
 
 __author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 
+
 #-------------------------------------------------------------------------
 #
 #  iotools.py is a collection of tools for input and outputting data
 #
 #-------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------
+# getDialect(aFile)
+#-------------------------------------------------------------------------
+def getDialect(aFile):
+
+    import csv
+    csvDialect = csv.Sniffer().sniff(aFile.readline())
+
+    return csvDialect
+#-------------------------------------------------------------------------
+
 if __name__ == '__main__':
 
 #
@@ -58,7 +72,7 @@ def csv_to_dict(filename,
 
         aDict = {}
         with open(filename, 'r') as f:
-            csvDialect = csv.Sniffer().sniff(f.read(4096))
+            csvDialect = getDialect(f)
             f.seek(0)
             csvReader = csv.reader(f, dialect=csvDialect)
             if skip_header:
@@ -100,7 +114,7 @@ def csv_to_nested_dict(filename,
             from collections import OrderedDict
             aDict = OrderedDict()
             with open(filename, 'rb') as f:
-                csvDialect = csv.Sniffer().sniff(f.read(4096))
+                csvDialect = getDialect(f)
                 f.seek(0)
                 csvReader = csv.reader(f, dialect=csvDialect)
                 fields = next(csvReader)
@@ -112,7 +126,7 @@ def csv_to_nested_dict(filename,
         else:
             aDict = {}
             with open(filename, 'rb') as f:
-                csvDialect = csv.Sniffer().sniff(f.read(4096))
+                csvDialect = getDialect(f)
                 f.seek(0)
                 csvReader = csv.DictReader(f, dialect=csvDialect)
                 for row in csvReader:

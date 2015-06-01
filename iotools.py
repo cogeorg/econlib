@@ -1,13 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = """Michael Rose (michael.q.rose@gmail.com)"""
+__author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
+
 
 #-------------------------------------------------------------------------
 #
 #  iotools.py is a collection of tools for input and outputting data
 #
 #-------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------
+# getDialect(aFile)
+#-------------------------------------------------------------------------
+def getDialect(aFile):
+
+    import csv
+    csvDialect = csv.Sniffer().sniff(aFile.readline())
+
+    return csvDialect
+#-------------------------------------------------------------------------
+
 if __name__ == '__main__':
 
 #
@@ -22,7 +36,7 @@ if __name__ == '__main__':
 #
 #-------------------------------------------------------------------------
 class io(object):
-    __version__ = 0.1
+    __version__ = 0.2
 
     #
     #  METHODS
@@ -39,8 +53,7 @@ class io(object):
 def csv_to_dict(filename,
                 key_func,
                 value_func,
-                skip_header = True
-    ):
+                skip_header = True):
         """
         Reads a csv as a dictionary, where values and keys are set in a flexible manner. Delimiters are determined automatically.
 
@@ -59,14 +72,66 @@ def csv_to_dict(filename,
 
         aDict = {}
         with open(filename, 'r') as f:
-            dialect = csv.Sniffer().sniff(f.read(1024), delimiters=";,")
+            csvDialect = getDialect(f)
             f.seek(0)
-            csvReader = csv.reader(f, dialect)
+            csvReader = csv.reader(f, dialect=csvDialect)
             if skip_header:
                 next(csvReader, None)
             for row in csvReader:
                 key = key_func(row)
                 aDict[key] = value_func(row)
+
+        return aDict
+    #-------------------------------------------------------------------------
+
+
+    #-------------------------------------------------------------------------
+    # csv_to_nested_dict(
+    #    filename,
+    #    key_func,
+    #    skip_header
+    #    )
+    #-------------------------------------------------------------------------
+def csv_to_nested_dict(filename,
+                       key_func,
+                       ordered = False):
+        """
+        Reads a csv as a dictionary of dictionaries, where keys are set in a flexible manner. Delimiters are determined automatically.
+
+        Args:
+            filename (str) -- the name of the source file
+            key_func (func) -- a function specifying which row(s) of the csv file should be the keys of the dictionary
+            ordered (boolean - optional) -- set to True if entire dictionary shall be ordered
+
+        Returns:
+            aDict (dict) -- the nested dictionary compiled from the csv file
+
+        """
+
+        import csv
+
+        if ordered:
+            from collections import OrderedDict
+            aDict = OrderedDict()
+            with open(filename, 'rb') as f:
+                csvDialect = getDialect(f)
+                f.seek(0)
+                csvReader = csv.reader(f, dialect=csvDialect)
+                fields = next(csvReader)
+                for row in csvReader:
+                    temp = OrderedDict(zip(fields, row))
+                    key = key_func(temp)
+                    aDict[key] = temp
+
+        else:
+            aDict = {}
+            with open(filename, 'rb') as f:
+                csvDialect = getDialect(f)
+                f.seek(0)
+                csvReader = csv.DictReader(f, dialect=csvDialect)
+                for row in csvReader:
+                    key = key_func(row)
+                    aDict[key] = row
 
         return aDict
     #-------------------------------------------------------------------------
@@ -81,23 +146,27 @@ def csv_to_dict(filename,
     #-------------------------------------------------------------------------
 def nested_dict_to_csv(aNestedDict,
                        FileName,
-                       FirstFieldName = ""
-    ):
+                       FirstFieldName = "",
+                       write_header = True,
+                       SubKeys = None):
         """
-        Takes an dictionary of dictionatires and outputs it as csv with keys as rownames and subkeys as column names
+        Takes an dictionary of dictionaries and outputs it as csv with keys as rownames and subkeys as column names
 
         Args:
             aNestedDict (dict) -- a dictionary of dictionaries
             FileName (str) -- the name of target file
             FirstFieldName (str - optional) -- the name of the first column (ie the name for the keys - if none is given,
                                                the field is empty)
+            write_header (boolean - optional) -- set to False if header should not be written
+            SubKeys (list of strings - optional) -- pass to control in which order the subkeys are printed
 
         """
 
         import csv
 
         # get unique names of all subkeys
-        SubKeys = list({subkey for key in aNestedDict.values() for subkey in key})
+        if SubKeys == None:
+            SubKeys = list({subkey for key in aNestedDict.values() for subkey in key})
 
         # create proper list of field names
         
@@ -106,7 +175,8 @@ def nested_dict_to_csv(aNestedDict,
         # output using csv
         with open(FileName, 'wb') as f:
             csvWriter = csv.DictWriter(f, fieldnames=FieldNames, lineterminator='\n')
-            csvWriter.writeheader()
+            if write_header:
+                csvWriter.writeheader()
             out_rows = []
             for key, data in aNestedDict.items():
                 row = {FieldNames[0]: key}

@@ -5,3 +5,4 @@ A collection of useful simple pthon modules for economic modelling. Each module 
 
 * ConfTools is a simple class to handle xml config files.
 * MappingTools is a class to create mapping files. 
+* IOTools is a class to easily input and output (csv files <-> dictionaries and nested dictionaries)

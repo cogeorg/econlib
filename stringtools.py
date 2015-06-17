@@ -82,7 +82,7 @@ def normalize(aDirtyString):
 
         # Remove if not possible
         except UnicodeDecodeError:
-            aCleanString = "".join(i for i in aDirtyString if ord(i)<128)
+            aCleanString = "".join(i if ord(i)<128 else ' ' for i in aDirtyString)
 
         return aCleanString
     #-------------------------------------------------------------------------

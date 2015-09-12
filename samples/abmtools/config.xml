@@ -1,0 +1,7 @@
+<config identifier="test">
+	<parameter type="input" kind="integer" low="1" high="3"></parameter>
+	<parameter type="output" kind="float" low="0.0" high="4.0" target="2.0"></parameter>
+	<parameter type="sweeps" number="10"></parameter>
+	<parameter type="distance" kind="squared"></parameter>
+	<parameter type="script" name="test_abmtools-1" function="main"></parameter>
+</config>

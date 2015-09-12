@@ -1,4 +1,5 @@
 <config identifier="test">
 	<parameter type="static" name="param1" value="1.0"></parameter>
-	<parameter type="changing" name="param2" value="1.0" validity="0-1000"></parameter>
+    <!-- variable parameters must be float or int -->
+	<parameter type="variable" name="param2" range="0.0-1000.0" stepwidth="10.0"></parameter>
 </config>

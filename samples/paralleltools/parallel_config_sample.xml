@@ -1,0 +1,6 @@
+<config identifier="test">
+	<parameter type="static" name="template_config_file" value="samples/paralleltools/parallel_template_sample.xml"></parameter>
+    <parameter type="static" name="output_basefile_name" value="samples/paralleltools/parallel_template"></parameter>
+    <parameter type="static" name="num_runs" value="1000029"></parameter>
+    <parameter type="static" name="num_cores" value="32"></parameter>
+</config>

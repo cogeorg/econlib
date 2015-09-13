@@ -1,0 +1,7 @@
+<config identifier="template_sample">
+	<parameter type="static" name="param1" value="1.0"></parameter>
+    <!-- variable parameters must be float or int -->
+	<parameter type="variable" name="param2" range="0.0-1000.0"></parameter>
+	<parameter type="variable" name="param3" range="0.0-2000.0"></parameter>
+	<parameter type="variable" name="param4" range="0.0-4000.0"></parameter>
+</config>

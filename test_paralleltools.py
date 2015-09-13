@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
@@ -19,12 +19,8 @@ if __name__ == '__main__':
     args = sys.argv
     config_file_name = args[1]
 
-
     """
     CODE
     """
-    config = Config()
-    config.read_xml_config_file(config_file_name)
-
-    print config.static_parameters
-    print config.changing_parameters
+    parallel = ParallelTools()
+    parallel.create_config_files(config_file_name)

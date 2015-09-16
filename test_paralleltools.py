@@ -4,7 +4,7 @@
 __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
 
 import sys
-from paralleltools import ParallelTools
+from paralleltools import Parallel
 
 #-------------------------------------------------------------------------
 #
@@ -22,5 +22,5 @@ if __name__ == '__main__':
     """
     CODE
     """
-    parallel = ParallelTools()
+    parallel = Parallel()
     parallel.create_config_files(config_file_name)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 """
@@ -25,6 +25,11 @@ import csv
 import time
 import glob
 
+# ---------------------------------------------------------------------------
+#
+# CLASS ABMTools
+#
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 #
@@ -77,8 +82,14 @@ class ABMTools(object):
     """
 
     def __init__(self):
-        pass
+        self.num_runs = 0  # how many runs we do
+        self.model_parameters = {}  # the parameters of the model
+        self.run_parameters = []  # this is an array of model_parameters with length self.num_runs
 
+
+#
+# HELPER METHODS
+#
     # Not used, created for testing [adds more details than the standard one below]
     def write_output_one_full(self, FileName, out_got, max_d):
         with open(FileName, 'w', newline='') as f:
@@ -278,8 +289,11 @@ class ABMTools(object):
             else:
                 print("Error reading config file.")
 
-    # Legacy input, input may be provided by the user using keyboard input as well. Need to be shifted to this
-    # below in the code, if desired.
+
+#
+# WORKER METHODS
+#
+
     def read_input(self):
 
         # Make the variables global, as we use them outside the function
@@ -352,6 +366,13 @@ class ABMTools(object):
         # Add the function name to be called within the script
         funct_name = input("Enter the name of fuction to be called inside the script: ")
 
+
+#
+# WORKER METHODS
+#
+    """
+    abmgoodness
+    """
     def abmgoodness(self, confName):
         """
         Main program
@@ -512,6 +533,10 @@ class ABMTools(object):
         else:
             print("No input or output parameters entered.")
 
+
+    """
+    collate
+    """
     def collate(self):
         '''
         Main program
@@ -552,3 +577,36 @@ class ABMTools(object):
         # Add return goodness if you so desire
         else:
             print("Nothing has been read.")
+
+
+    """
+    initialize_run_parameters
+    """
+    def initialize_run_parameters(self, config):
+        # there are config.static_parameters['runs'] runs
+        self.num_runs = int(config.static_parameters['runs'])
+
+        # create a dict of self.model_parameters, one for each run
+        for i in range(0,self.num_runs):
+            # for each variable parameter, we need a value that is drawn from within the range
+            self.model_parameters = {}  # clear the existing model parameters
+            for param_key in sorted(config.variable_parameters.keys()):
+                lower = config.variable_parameters[param_key][0]
+                upper = config.variable_parameters[param_key][1]
+                value = random.uniform(lower, upper)
+                self.model_parameters[param_key] = value
+            self.run_parameters.append(self.model_parameters)
+
+
+    """
+    runner
+    """
+    def runner(self, config):
+        # first, initialize the run parameters
+        self.initialize_run_parameters(config)
+
+        for entry in self.run_parameters:
+            print entry
+        print self.num_runs, len(self.run_parameters)
+
+

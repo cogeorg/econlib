@@ -21,10 +21,10 @@ from conftools import Config
 
 # ---------------------------------------------------------------------------
 #
-# CLASS ParallelTools
+# Class Parallel
 #
 # ---------------------------------------------------------------------------
-class ParallelTools(object):
+class Parallel(object):
     __version__ = 0.1
 
     """
@@ -35,13 +35,11 @@ class ParallelTools(object):
     """
     Functions
     """
-
     def __init__(self):
         self.num_runs = 0
         self.num_cores = 0
         self.runs_per_core = 0
         self.runs_last_core = 0
-
 
     def create_parallel_config_file(self, control_config, template_config, counter):
         # the number of runs depends on the core we look at
@@ -57,7 +55,7 @@ class ParallelTools(object):
         # the other static parameters remain the same
         for entry in template_config.static_parameters:
             value = template_config.static_parameters[entry]
-            out_str += "  <parameter type='static' name='" + entry + "' value='" + str(value) + "'></parameter\n"
+            out_str += "  <parameter type='static' name='" + entry + "' value='" + str(value) + "'></parameter>\n"
 
         # find variable parameter keys
         param_keys = sorted(template_config.variable_parameters.keys())

@@ -1,20 +1,21 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 import sys
 from abmtools import ABMTools
 
+
 """
 Testing for the robustness check for Agent-Based Models (conceivably other models as well) across the whole of the multidimensional parameter space.
 
-    test_abmtools test_number [optional]
+    test_abmtools test_number config_file_name
 
 Author: Pawel Fiedor (pawel@fiedor.eu)
         Co-Pierre Georg (cogeorg@gmail.com)
 
 Version: 0.03
 
-Date of last update: 04-09-2015 (Cape Town)
+Date of last update: 2015-09-13 (Cape Town)
 
 """
 if __name__ == '__main__':
@@ -109,3 +110,43 @@ if test_number == "3":
     print("Test number: " + str(args[1]))
     print("Ran to collate results and gotten goodness of " + str(testout))
 
+
+
+"""
+Test 4:
+"""
+if test_number == "4":
+    # imports besides abmtools
+#    from conftools import Config
+
+    # we have a second parameter
+    config_file_name = args[2]
+
+    abmtools = ABMTools()
+    config = Config()
+    config.read_xml_config_file(config_file_name)
+
+    abmtools.runner(config)
+
+
+
+if test_number == "5":
+    from src.abmtools.baseconfig import BaseConfig
+
+    class Config(BaseConfig):
+        identifier = None
+
+        def __init__(self, _identifier):
+            self.set_identifier(_identifier)
+
+        def get_identifier(self):
+            return self.identifier
+        def set_identifier(self, _identifier):
+            super(Config, self).set_identifier(_identifier)
+
+
+    arr = "f"#['0','1']
+    a = Config("a")
+    print a.get_identifier()
+    b = Config("b")
+    print b.get_identifier(), a.get_identifier()

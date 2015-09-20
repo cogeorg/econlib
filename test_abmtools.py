@@ -129,24 +129,20 @@ if test_number == "4":
     abmtools.runner(config)
 
 
-
+"""
+TEST 5:
+"""
 if test_number == "5":
-    from src.abmtools.baseconfig import BaseConfig
+    import random
 
-    class Config(BaseConfig):
-        identifier = None
+    from src.abmimplementation.config import Config
+    from src.abmimplementation.runner import Runner
 
-        def __init__(self, _identifier):
-            self.set_identifier(_identifier)
+    runner_config_file_name = sys.argv[2]
 
-        def get_identifier(self):
-            return self.identifier
-        def set_identifier(self, _identifier):
-            super(Config, self).set_identifier(_identifier)
+    runner_config = Config()
+    runner_config.read_xml_config_file(runner_config_file_name)
 
+    runner = Runner(runner_config)
+    runner.do_run()
 
-    arr = "f"#['0','1']
-    a = Config("a")
-    print a.get_identifier()
-    b = Config("b")
-    print b.get_identifier(), a.get_identifier()

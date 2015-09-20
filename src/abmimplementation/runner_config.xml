@@ -1,0 +1,4 @@
+<config identifier='runner_config'>
+  <parameter type='static' name='model_config_file_name' value='src/abmimplementation/model_config.xml'></parameter>
+  <parameter type='static' name='num_simulations' value='2'></parameter>
+</config>

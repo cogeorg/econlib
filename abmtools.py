@@ -584,10 +584,10 @@ class ABMTools(object):
     """
     def initialize_run_parameters(self, config):
         # there are config.static_parameters['runs'] runs
-        self.num_runs = int(config.static_parameters['runs'])
+        self.num_simulations = int(config.static_parameters['num_simulations'])
 
         # create a dict of self.model_parameters, one for each run
-        for i in range(0,self.num_runs):
+        for i in range(0,self.num_simulations):
             # for each variable parameter, we need a value that is drawn from within the range
             self.model_parameters = {}  # clear the existing model parameters
             for param_key in sorted(config.variable_parameters.keys()):
@@ -604,9 +604,11 @@ class ABMTools(object):
     def runner(self, config):
         # first, initialize the run parameters
         self.initialize_run_parameters(config)
+        # at this point, we have static parameters with the number of runs and the model config file
+
 
         for entry in self.run_parameters:
             print entry
-        print self.num_runs, len(self.run_parameters)
+        print self.num_simulations, len(self.run_parameters)
 
 

@@ -43,5 +43,5 @@ class Runner(object):
             model = Model(self.model_config)
             model.initialize_agents()
 
-            model.do_update()
+            print model
 

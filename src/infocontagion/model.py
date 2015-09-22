@@ -69,14 +69,14 @@ class Model(BaseModel):
                 return agent
 
     def check_agent_homogeneity(self):
-        for entry in agents[0].parameters:
-            check_param = agents[0].parameters[entry]
+        for entry in self.agents[0].parameters:
+            check_param = self.agents[0].parameters[entry]
             for agent in self.agents:
                 if agent.parameters[entry] != check_param:
                     return False
                 check_param = agent.parameters[entry]
-        for entry in agents[0].state_variables:
-            check_stvar = agents[0].state_variables[entry]
+        for entry in self.agents[0].state_variables:
+            check_stvar = self.agents[0].state_variables[entry]
             for agent in self.agents:
                 if agent.state_variables[entry] != check_stvar:
                     return False

@@ -63,7 +63,25 @@ class Model(BaseModel):
             _agent = Agent(identifier, agent_parameters, state_variables)
             self.agents.append(_agent)
 
+    def get_agent_by_id(self, _id):
+        for agent in self.agents
+            if agent.identifier == _id:
+                return agent
 
+    def check_agent_homogeneity(self):
+        for entry in agents[0].parameters:
+            check_param = agents[0].parameters[entry]
+            for agent in self.agents:
+                if agent.parameters[entry] != check_param:
+                    return False
+                check_param = agent.parameters[entry]
+        for entry in agents[0].state_variables:
+            check_stvar = agents[0].state_variables[entry]
+            for agent in self.agents:
+                if agent.state_variables[entry] != check_stvar:
+                    return False
+                check_stvar == agent.state_variables[entry]
+        return True
 
     # TODO make this into a recursive routine that iterates automatically through all agentA.state_variables
     def compute_equilibrium(self, agentA, agentB):
@@ -110,7 +128,43 @@ class Model(BaseModel):
             # increase d1_A
             d1_A += step_d1
 
+    def compute_equilibrium_recursive(self, agentA, agentB):
+        self.par_keys = []
+        self.par_lower = []
+        self.par_upper = []
+        self.par_step  = []
+        self.par_current = []
+        for state_key, state_var in agentA.state_variables:
+            self.par_keys.append(str(state_key))
+            self.par_lower.append(float(state_var[0]))
+            self.par_upper.append(float(state_var[1]))
+            self.par_step.append((self.par_upper[-1] - self.par_lower[-1])/self.steps_per_state_variable)
+        
+        self.precision = 0.01
+        self.par_current = self.par_lower
+        self.loop_over_dimension(0)
 
+    def loop_over_dimension(self,p_step):
+        while self.par_current[p_step] <= self.par_upper[p_step]:
+            if (p_step+2) < len(self.par_upper):
+                self.loop_over_dimension(p_step+1)
+            elif (p_step+1) == len(self.par_upper):
+                # first set agentA state variables
+                for state_iterator in range(0,len(self.par_keys)):
+                    agentA.state_variables[self.state_key[state_iterator]] = self.par_current[state_iterator]
+
+                # then get the best response of B given the current portfolio choice of A
+                ret_B = agentB.get_best_response(self.par_current)
+
+                # and then get the best response of A given the best response of B
+                ret_A = agentA.get_best_response(ret_B)
+
+                # check if we have a fixed point
+                #if ( abs(ret_A[0] - d1_A) < precision) and (abs(ret_A[1] - y_A) < precision) and (abs(ret_A[2] - b_A) < precision):
+                if all(i < self.precision for i in [abs(x) - y for x, y in zip(ret_A, self.par_current)])
+                    # here we have to write out the results
+                    pass
+            self.par_current[p_step] += self.par_step[p_step]
 
     def do_update(self):
         # equilibrium is found by iterating over all possible variable choices for agent A, communicating them to

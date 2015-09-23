@@ -144,7 +144,7 @@ class Model(BaseModel):
         self.par_current = self.par_lower
         self.loop_over_dimension(0, agentA, agentB)
 
-    def loop_over_dimension(self,recursion_level, agentA, agentB):
+    def loop_over_dimension(self, recursion_level, agentA, agentB):
         while self.par_current[recursion_level] <= self.par_upper[recursion_level]:
             if (recursion_level+1) < len(self.par_upper):
                 self.loop_over_dimension(recursion_level+1)

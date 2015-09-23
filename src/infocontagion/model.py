@@ -64,23 +64,23 @@ class Model(BaseModel):
             self.agents.append(_agent)
 
     def get_agent_by_id(self, _id):
-        for agent in self.agents
-            if agent.identifier == _id:
-                return agent
+        for agent_iterator in self.agents:
+            if agent_iterator.identifier == _id:
+                return agent_iterator
 
     def check_agent_homogeneity(self):
-        for entry in self.agents[0].parameters:
-            check_param = self.agents[0].parameters[entry]
-            for agent in self.agents:
-                if agent.parameters[entry] != check_param:
+        for parameter_iterator in self.agents[0].parameters:
+            temp_parameter = self.agents[0].parameters[parameter_iterator]
+            for agent_iterator in self.agents:
+                if agent_iterator.parameters[parameter_iterator] != temp_parameter:
                     return False
-                check_param = agent.parameters[entry]
-        for entry in self.agents[0].state_variables:
-            check_stvar = self.agents[0].state_variables[entry]
-            for agent in self.agents:
-                if agent.state_variables[entry] != check_stvar:
+                temp_parameter = agent_iterator.parameters[parameter_iterator]
+        for parameter_iterator in self.agents[0].state_variables:
+            temp_state_variable = self.agents[0].state_variables[parameter_iterator]
+            for agent_iterator in self.agents:
+                if agent_iterator.state_variables[parameter_iterator] != temp_state_variable:
                     return False
-                check_stvar == agent.state_variables[entry]
+                temp_state_variable == agent_iterator.state_variables[parameter_iterator]
         return True
 
     # TODO make this into a recursive routine that iterates automatically through all agentA.state_variables
@@ -138,20 +138,20 @@ class Model(BaseModel):
             self.par_keys.append(str(state_key))
             self.par_lower.append(float(state_var[0]))
             self.par_upper.append(float(state_var[1]))
-            self.par_step.append((self.par_upper[-1] - self.par_lower[-1])/self.steps_per_state_variable)
+            self.par_step.append((self.par_upper[-1] - self.par_lower[-1]) / self.steps_per_state_variable)
         
         self.precision = 0.01
         self.par_current = self.par_lower
-        self.loop_over_dimension(0)
+        self.loop_over_dimension(0, agentA, agentB)
 
-    def loop_over_dimension(self,p_step):
-        while self.par_current[p_step] <= self.par_upper[p_step]:
-            if (p_step+2) < len(self.par_upper):
-                self.loop_over_dimension(p_step+1)
-            elif (p_step+1) == len(self.par_upper):
+    def loop_over_dimension(self,recursion_level, agentA, agentB):
+        while self.par_current[recursion_level] <= self.par_upper[recursion_level]:
+            if (recursion_level+1) < len(self.par_upper):
+                self.loop_over_dimension(recursion_level+1)
+            elif (recursion_level+1) == len(self.par_upper):
                 # first set agentA state variables
                 for state_iterator in range(0,len(self.par_keys)):
-                    agentA.state_variables[self.state_key[state_iterator]] = self.par_current[state_iterator]
+                    agentA.state_variables[self.par_keys[state_iterator]] = self.par_current[state_iterator]
 
                 # then get the best response of B given the current portfolio choice of A
                 ret_B = agentB.get_best_response(self.par_current)
@@ -160,11 +160,10 @@ class Model(BaseModel):
                 ret_A = agentA.get_best_response(ret_B)
 
                 # check if we have a fixed point
-                #if ( abs(ret_A[0] - d1_A) < precision) and (abs(ret_A[1] - y_A) < precision) and (abs(ret_A[2] - b_A) < precision):
                 if all(i < self.precision for i in [abs(x) - y for x, y in zip(ret_A, self.par_current)])
                     # here we have to write out the results
                     pass
-            self.par_current[p_step] += self.par_step[p_step]
+            self.par_current[recursion_level] += self.par_step[recursion_level]
 
     def do_update(self):
         # equilibrium is found by iterating over all possible variable choices for agent A, communicating them to

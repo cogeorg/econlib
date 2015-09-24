@@ -147,7 +147,8 @@ class Model(BaseModel):
     def loop_over_dimension(self, recursion_level, agentA, agentB):
         while self.par_current[recursion_level] <= self.par_upper[recursion_level]:
             if (recursion_level+1) < len(self.par_upper):
-                self.loop_over_dimension(recursion_level+1)
+                self.par_current[recursion_level+1] = self.par_lower[recursion_level+1]
+                self.loop_over_dimension(recursion_level+1, agentA, agentB)
             elif (recursion_level+1) == len(self.par_upper):
                 # first set agentA state variables
                 for state_iterator in range(0,len(self.par_keys)):

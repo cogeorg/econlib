@@ -46,11 +46,11 @@ class Model(BaseModel):
         num_agents = int(self.model_parameters['num_agents'])
 
         # construct agent_parameters dict
-        agent_parameters = {'rho': float(self.model_parameters['rho'])}
+        agent_parameters = {'rho': float(self.model_parameters['rho']), 'q': float(self.model_parameters['q'])}
 
         # TODO: these values should be set in the model config file somehow, so this code has to be refactored
         d1_lower = 0.1
-        d1_upper = min(self.model_parameters['RG']/(self.model_parameters['lambda']+self.model_parameters['eta']), 1.5)
+        d1_upper = min(self.model_parameters['R']/(self.model_parameters['lambda']+self.model_parameters['eta']), 1.5)
         y_lower = 0.0
         y_upper = 1.0
         b_lower = 0.0
@@ -225,11 +225,9 @@ class Model(BaseModel):
         return self.expected_utility_6(agent)
 
 
-
-
     # -----------------------------------------------------------------------
     #
-    # compute optimum
+    # find_optimum
     #
     # -----------------------------------------------------------------------
     def find_optimum(self, agent):
@@ -340,7 +338,7 @@ class Model(BaseModel):
                 ret_A = agentA.get_best_response(ret_B)
 
                 # check if we have a fixed point
-                if all(i < self.precision for i in [abs(x) - y for x, y in zip(ret_A, self.par_current)])
+                if all(i < self.precision for i in [abs(x) - y for x, y in zip(ret_A, self.par_current)]):
                     # here we have to write out the results
                     pass
             self.par_current[recursion_level] += self.par_step[recursion_level]

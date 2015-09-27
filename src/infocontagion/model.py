@@ -217,7 +217,6 @@ class Model(BaseModel):
             EU2 = 0.5*(EU_H + EU2_L)
         return EU2
 
-
     def calculate_EU5(self, agent):
         return self.expected_utility_5(agent)
 
@@ -300,7 +299,7 @@ class Model(BaseModel):
                 y += step_y
             # increase d1
             d1 += step_d1
-        print max1, max2, max5, max6
+        return([max1, max2, max5, max6])
 
 
     # TODO this code is fairly general and should be generalized further and then moved to the BaseAgent class
@@ -354,4 +353,5 @@ class Model(BaseModel):
         self.steps_per_state_variable = int(round(math.pow(float(self.model_parameters['num_sweeps']),
                                                            1.0/len(agent.state_variables)), 0))
 
-        self.find_optimum(agent)
+        optimum = self.find_optimum(agent)
+        return optimum

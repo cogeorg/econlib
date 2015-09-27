@@ -1,4 +1,5 @@
 <config identifier='infocontagion_runner_config-1'>
   <parameter type='static' name='model_config_file_name' value='src/infocontagion/model_config.xml'></parameter>
+  <parameter type='static' name='output_file_name' value='src/infocontagion/output/infocontagion_runner_config-1.csv'></parameter>
   <parameter type='static' name='num_simulations' value='2'></parameter>
 </config>

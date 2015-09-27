@@ -3,8 +3,8 @@
 
 from random import Random
 
-from src.abmimplementation.config import Config
-from src.abmimplementation.model import Model
+from src.infocontagion.config import Config
+from src.infocontagion.model import Model
 
 class Runner(object):
     identifier = ""
@@ -42,6 +42,6 @@ class Runner(object):
 
             model = Model(self.model_config)
             model.initialize_agents()
-
+            model.do_update()
             print model
 

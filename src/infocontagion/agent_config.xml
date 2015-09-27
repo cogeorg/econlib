@@ -1,5 +1,5 @@
-<config identifier='agent_config'>
+<config identifier='infocontagion_agent_config'>
     <!-- initialization_type E {random, directory} -->
     <parameter type='static' name='initialization_type' value='random'></parameter>
-    <parameter type='variable' name='rho' range='1.0-4.0'></parameter>
+    <parameter type='variable' name='rho' range='1.0-1.0'></parameter>
 </config>

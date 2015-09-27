@@ -1,13 +1,15 @@
-<config identifier='sample_config'>
+<config identifier='infocontagion_model_config'>
     <!-- parameters specifying the numerical implementation of the economic model -->
-    <parameter type='static' name='num_sweeps' value='1000'></parameter>
-    <parameter type='static' name='num_agents' value='2'></parameter>
+    <parameter type='static' name='num_sweeps' value='1000000'></parameter>
+    <parameter type='static' name='num_agents' value='1'></parameter>
 
     <!-- parameters specifying the economic model itself -->
-    <parameter type='static' name='lambda' value='0.5'></parameter>
-    <parameter type='variable' name='RG' range='2.0-5.0'></parameter>
-    <parameter type='variable' name='rho' range='1.0-4.0'></parameter>
+    <parameter type='variable' name='R' range='2.0-5.0'></parameter>
     <parameter type='variable' name='beta' range='2.0-5.0'></parameter>
-    <parameter type='variable' name='theta' range='2.0-5.0'></parameter>
+    <parameter type='static' name='lambda' value='0.5'></parameter>
+    <parameter type='variable' name='phi' range='1.0-2.0'></parameter>
+    <parameter type='variable' name='q' range='0.0-1.0'></parameter>
+
+    <parameter type='variable' name='rho' range='1.0-4.0'></parameter>
     <parameter type='variable' name='eta' range='0.0-0.5'></parameter>
 </config>

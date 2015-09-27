@@ -4,8 +4,8 @@
 import sys
 import random
 
-from src.abmimplementation.config import Config
-from src.abmimplementation.runner import Runner
+from src.infocontagion.config import Config
+from src.infocontagion.runner import Runner
 
 if __name__ == '__main__':
     runner_config_file_name = sys.argv[1]

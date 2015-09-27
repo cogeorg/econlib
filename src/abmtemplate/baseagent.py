@@ -78,6 +78,6 @@ class BaseAgent(object):
 
         return ret_str
 
-    @abc.abstractmethod
-    def get_best_response(self, opponent_strategy):
-        pass
+    #@abc.abstractmethod
+    #def get_best_response(self, opponent_strategy):
+    #    pass

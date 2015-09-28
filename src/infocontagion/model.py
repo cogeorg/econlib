@@ -63,29 +63,6 @@ class Model(BaseModel):
             _agent = Agent(identifier, agent_parameters, state_variables)
             self.agents.append(_agent)
 
-    # TODO this code is fairly generalized, refactor it and move it into BaseAgent class
-    def get_agent_by_id(self, _id):
-        for agent_iterator in self.agents:
-            if agent_iterator.identifier == _id:
-                return agent_iterator
-
-    # TODO this code is fairly generalized, refactor it and move it into BaseAgent class
-    def check_agent_homogeneity(self):
-        for parameter_iterator in self.agents[0].parameters:
-            temp_parameter = self.agents[0].parameters[parameter_iterator]
-            for agent_iterator in self.agents:
-                if agent_iterator.parameters[parameter_iterator] != temp_parameter:
-                    return False
-                temp_parameter = agent_iterator.parameters[parameter_iterator]
-        for parameter_iterator in self.agents[0].state_variables:
-            temp_state_variable = self.agents[0].state_variables[parameter_iterator]
-            for agent_iterator in self.agents:
-                if agent_iterator.state_variables[parameter_iterator] != temp_state_variable:
-                    return False
-                temp_state_variable == agent_iterator.state_variables[parameter_iterator]
-        return True
-
-
     # -----------------------------------------------------------------------
     #
     # expected utilities
@@ -300,48 +277,6 @@ class Model(BaseModel):
             # increase d1
             d1 += step_d1
         return([max1, max2, max5, max6])
-
-
-    # TODO this code is fairly general and should be generalized further and then moved to the BaseAgent class
-    def compute_equilibrium_recursive(self, agentA, agentB):
-        self.par_keys = []
-        self.par_lower = []
-        self.par_upper = []
-        self.par_step  = []
-        self.par_current = []
-        for state_key, state_var in agentA.state_variables:
-            self.par_keys.append(str(state_key))
-            self.par_lower.append(float(state_var[0]))
-            self.par_upper.append(float(state_var[1]))
-            self.par_step.append((self.par_upper[-1] - self.par_lower[-1]) / self.steps_per_state_variable)
-
-        self.precision = 0.01
-        self.par_current = self.par_lower
-        self.loop_over_dimension(0, agentA, agentB)
-
-    # TODO this code is fairly general and should be generalized further and then moved to the BaseAgent class
-    def loop_over_dimension(self, recursion_level, agentA, agentB):
-        while self.par_current[recursion_level] <= self.par_upper[recursion_level]:
-            if (recursion_level+1) < len(self.par_upper):
-                self.par_current[recursion_level+1] = self.par_lower[recursion_level+1]
-                self.loop_over_dimension(recursion_level+1, agentA, agentB)
-            elif (recursion_level+1) == len(self.par_upper):
-                # first set agentA state variables
-                for state_iterator in range(0,len(self.par_keys)):
-                    agentA.state_variables[self.par_keys[state_iterator]] = self.par_current[state_iterator]
-
-                # then get the best response of B given the current portfolio choice of A
-                ret_B = agentB.get_best_response(self.par_current)
-
-                # and then get the best response of A given the best response of B
-                ret_A = agentA.get_best_response(ret_B)
-
-                # check if we have a fixed point
-                if all(i < self.precision for i in [abs(x) - y for x, y in zip(ret_A, self.par_current)]):
-                    # here we have to write out the results
-                    pass
-            self.par_current[recursion_level] += self.par_step[recursion_level]
-
 
     # =======================================================================
     # do_update

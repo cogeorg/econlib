@@ -94,13 +94,18 @@ class BaseModel(object):
 
         self.set_model_parameters(_params)
 
-
-
     @abc.abstractmethod
     def initialize_agents(self):
         pass
 
-
     @abc.abstractmethod
     def do_update(self):
+        pass
+
+    @abc.abstractmethod
+    def get_agent_by_id(self, _id):
+        pass
+
+    @abc.abstractmethod
+    def check_agent_homogeneity(self):
         pass

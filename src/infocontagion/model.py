@@ -38,6 +38,12 @@ class Model(BaseModel):
     def set_interactions(self, _value):
         super(Model, self).set_interactions(_value)
 
+    def get_agent_by_id(self, _id):
+        super(Model, self).get_agent_by_id(_id)
+
+    def check_agent_homogeneity(self):
+        super(Model, self).check_agent_homogeneity()        
+
     def __str__(self):
         return super(Model, self).__str__()
 
@@ -199,7 +205,10 @@ class Model(BaseModel):
 
     def calculate_EU6(self, agent):
         return self.expected_utility_6(agent)
-
+    
+    def calculate_EU_test(self, agent):
+        EU1 = agent.state_variables['d1'] + agent.state_variables['y'] - agent.state_variables['b']
+        return EU1
 
     # -----------------------------------------------------------------------
     #

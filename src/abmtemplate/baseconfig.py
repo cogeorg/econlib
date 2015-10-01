@@ -12,6 +12,9 @@ from xml.etree import ElementTree
 #
 # -------------------------------------------------------------------------
 class BaseConfig(object):
+    """
+    Class variables: __metaclass__, identifier, static_parameters, variable_parameters
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -19,6 +22,10 @@ class BaseConfig(object):
         return
     @abc.abstractmethod
     def set_identifier(self, _identifier):
+        """
+        Class variables: identifier
+        Local variables: _identifier
+        """
         if not isinstance(_identifier, str):
             raise TypeError
         else:
@@ -31,6 +38,10 @@ class BaseConfig(object):
         return
     @abc.abstractmethod
     def set_static_parameters(self, _params):
+        """
+        Class variables: static_parameters
+        Local variables: _params
+        """
         if not isinstance(_params, dict):
             raise TypeError
         else:
@@ -43,6 +54,10 @@ class BaseConfig(object):
         return
     @abc.abstractmethod
     def set_variable_parameters(self, _params):
+        """
+        Class variables: variable_parameters
+        Local variables: _params
+        """
         if not isinstance(_params, dict):
             raise TypeError
         else:
@@ -53,6 +68,10 @@ class BaseConfig(object):
 
     @abc.abstractmethod
     def __str__(self):
+        """
+        Class variables: identifier, static_parameters, variable_parameters
+        Local variables: out_str, entry, value, from_value, to_value
+        """
         out_str = "<config identifier='" + self.identifier + "'>\n"
         for entry in self.static_parameters:
             value = self.static_parameters[entry]
@@ -75,6 +94,10 @@ class BaseConfig(object):
 
     @abc.abstractmethod
     def __init__(self):
+        """
+        Class variables: identifier, static_parameters, variable_parameters
+        Local variables: 
+        """
         self.identifier = ""
         self.static_parameters = {}
         self.variable_parameters = {}
@@ -82,6 +105,10 @@ class BaseConfig(object):
 
     @abc.abstractmethod
     def read_xml_config_file(self, config_file_name):
+        """
+        Class variables: identifier, static_parameters, variable_parameters
+        Local variables: xmlText, config_file_name, element, subelement, name, value, format_correct, range_from, range_to
+        """
         xmlText = open(config_file_name).read()
         element = ElementTree.XML(xmlText)
         self.identifier = element.attrib['identifier']

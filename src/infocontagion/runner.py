@@ -8,9 +8,16 @@ from src.infocontagion.config import Config
 from src.infocontagion.model import Model
 
 class Runner(object):
+    """
+    Class variables: identifier, num_simulations, model_config_template, model_config, results, output_file_name
+    """
     identifier = ""
 
     def __init__(self, config):
+        """
+        Class variables: identifier, num_simulations, model_config_template, model_config, results, output_file_name
+        Local variables: model_config_file_name
+        """
         self.identifier = config.identifier
         self.num_simulations = int(config.static_parameters['num_simulations'])
 
@@ -26,6 +33,10 @@ class Runner(object):
 
 
     def generate_model_config(self, model_config_template):
+        """
+        Class variables: model_config, model_config_template
+        Local variables: model_config_file_name, model_config_template, value, entry, lower, upper, random
+        """
         self.model_config.identifier = self.model_config_template.identifier
         for entry in model_config_template.static_parameters:
             self.model_config.static_parameters[entry] = model_config_template.static_parameters[entry]
@@ -41,6 +52,10 @@ class Runner(object):
     get_out_text_header(model) is just a helper routine that prints the model parameters
     """
     def get_out_text_header(self, model):
+        """
+        Class variables: num_simulations
+        Local variables: out_text
+        """
         # start with runner parameters
         out_text = str(self.num_simulations) + ";"
         # add model parameters
@@ -57,6 +72,10 @@ class Runner(object):
 
 
     def write_results(self, model):
+        """
+        Class variables: results, output_file_name
+        Local variables: out_text, result, entry, item, results_array, out_file_name, out_file
+        """
         out_text = ""
         # loop over all results
         for result in self.results:  # each result is a list (of lists) itself
@@ -78,6 +97,10 @@ class Runner(object):
 
 
     def do_run(self):
+        """
+        Class variables: num_simulations, model_config, results
+        Local variables: i, model, result
+        """
         for i in range(0, self.num_simulations):
             # generate model parameters from runner_config
             self.generate_model_config(self.model_config_template)
@@ -90,7 +113,43 @@ class Runner(object):
             self.results.append(result)
             self.write_results(model)
 
+    def do_run_test_output(self):
+        """
+        Class variables: num_simulations, model_config, results
+        Local variables: i, model, result
+        """
+        for i in range(0, self.num_simulations):
+            self.model_config.static_parameters["a"] = "first"
+            self.model_config.static_parameters["b"] = "second"
+            self.model_config.static_parameters["num_sweeps"] = 10
+            self.model_config.static_parameters["num_agents"] = 20
+            self.model_config.static_parameters["rho"] = 30
+            self.model_config.static_parameters["q"] = 40
+            self.model_config.static_parameters["R"] = 50
+            self.model_config.static_parameters["lambda"] = 60
+            self.model_config.static_parameters["eta"] = 70
+            self.model_config.static_parameters["beta"] = 80
+            self.model_config.static_parameters["phi"] = 90
+            self.model_config.static_parameters["c"] = "third"
+            self.model_config.static_parameters["x"] = "last"
+            self.model_config.static_parameters["y"] = "penultimate"
+            self.model_config.static_parameters["z"] = "antepenultimate"
+            self.model_config.identifier = "writing_test"
+
+            model = Model(self.model_config)
+            model.initialize_agents()
+            result = ["ab", "cd", "ef"]
+            self.results.append(result)
+            result = ["gh", "ij", "kl"]
+            self.results.append(result)
+            self.write_results(model)
+
+
     def do_run_test_verbose(self):
+        """
+        Class variables: num_simulations, model_config, results
+        Local variables: i, model, result, agent_iterator
+        """
         for i in range(0, self.num_simulations):
             # generate model parameters from runner_config
             self.generate_model_config(self.model_config_template)
@@ -122,6 +181,10 @@ class Runner(object):
 
 
     def do_run_test_silent(self):
+        """
+        Class variables: num_simulations, model_config, results
+        Local variables: i, model, result, agent_iterator
+        """
         for i in range(0, self.num_simulations):
             # generate model parameters from runner_config
             self.generate_model_config(self.model_config_template)

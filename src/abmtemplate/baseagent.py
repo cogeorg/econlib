@@ -11,6 +11,9 @@ import abc
 #
 # -------------------------------------------------------------------------
 class BaseAgent(object):
+    """
+    Class variables: __metaclass__, identifier, parameters, state_variables
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -18,6 +21,10 @@ class BaseAgent(object):
         return
     @abc.abstractmethod
     def set_identifier(self, _identifier):
+        """
+        Class variables: identifier
+        Local variables: _identifier
+        """
         if not isinstance(_identifier, str):
             raise TypeError
         else:
@@ -30,6 +37,10 @@ class BaseAgent(object):
         return
     @abc.abstractmethod
     def set_parameters(self, _params):
+        """
+        Class variables: parameters
+        Local variables: _params
+        """
         if not isinstance(_params, dict):
             raise TypeError
         else:
@@ -42,6 +53,10 @@ class BaseAgent(object):
         return
     @abc.abstractmethod
     def set_state_variables(self, _variables):
+        """
+        Class variables: state_variables
+        Local variables: _variables
+        """
         if not isinstance(_variables, dict):
             raise TypeError
         else:
@@ -52,12 +67,20 @@ class BaseAgent(object):
 
     @abc.abstractmethod
     def __init__(self, _identifier, _params, _variables):
+        """
+        Class variables: parameters, state_variables
+        Local variables: _identifier, _params, _variables
+        """
         self.set_identifier(_identifier)
         self.parameters = _params
         self.state_variables = _variables
 
     @abc.abstractmethod
     def __str__(self):
+        """
+        Class variables: identifier, parameters, state_variables
+        Local variables: ret_str, entry, value
+        """
         ret_str = "  <agent identifier='" + self.identifier + "'>\n"
         for entry in self.parameters:
             value = self.parameters[entry]

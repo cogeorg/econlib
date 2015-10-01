@@ -10,6 +10,10 @@ from agent import Agent
 
 
 class Model(BaseModel):
+    """
+    Global variables: nan
+    Class variables: identifier, model_parameters, agents, interactions, steps_per_state_variable
+    """
     identifier = ""
     model_parameters = {}
     agents = []
@@ -21,34 +25,62 @@ class Model(BaseModel):
     def get_identifier(self):
         return self.identifier
     def set_identifier(self, _value):
+        """
+        Class variables: identifier
+        Local variables: _identifier
+        """
         super(Model, self).set_identifier(_value)
 
     def get_model_parameters(self):
         return self.model_parameters
     def set_model_parameters(self, _value):
+        """
+        Class variables: model_parameters
+        Local variables: _params
+        """
         super(Model, self).set_model_parameters(_value)
 
     def get_agents(self):
         return self.agents
     def set_agents(self, _value):
+        """
+        Class variables: agents
+        Local variables: _agents
+        """
         super(Model, self).set_agents(_value)
 
     def get_interactions(self):
         return self.interactions
     def set_interactions(self, _value):
+        """
+        Class variables: interactions
+        Local variables: _interactions
+        """
         super(Model, self).set_interactions(_value)
 
     def get_agent_by_id(self, _id):
+        """
+        Class variables: 
+        Local variables: _id
+        """
         super(Model, self).get_agent_by_id(_id)
 
     def check_agent_homogeneity(self):
         super(Model, self).check_agent_homogeneity()        
 
     def __str__(self):
+        """
+        Class variables: identifier, model_parameters, agents, interactions
+        Local variables: ret_str, entry, value, agent
+        """
         return super(Model, self).__str__()
 
 
     def initialize_agents(self):
+        """
+        Class variables: model_parameters, agents
+        Local variables: num_agents, d1_lower, d1_upper, y_lower, y_upper, b_lower, b_upper, state_variables, i, identifier, _agent
+        """
         num_agents = int(self.model_parameters['num_agents'])
 
         # construct agent_parameters dict
@@ -75,6 +107,11 @@ class Model(BaseModel):
     #
     # -----------------------------------------------------------------------
     def expected_utility_A(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: lamb, value, agent
+        """
         lamb = self.get_model_parameters()['lambda']
         value = agent.u1_A*(lamb + (1-lamb)*agent.theta_A) + (1-lamb)*(1-agent.theta_A)*0.5*(agent.u2_AG + agent.u1_A)
         if (agent.theta_A > 0.5):
@@ -82,6 +119,11 @@ class Model(BaseModel):
         return value
 
     def expected_utility_CE(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: lamb, value, state, theta_CE, q_H
+        """
         value = q_H*(  theta_CE*state.u_dc + (1-theta_CE)*( lamb*state.u_d_1 + (1-lamb)*0.5*(state.u2_Gce + state.u_d_ce) )  )
         value += (1-q_H)*(lamb*state.u_d_1 + (1-lamb)*0.5*(state.u2_Gce + state.u2_Bce))
         if (theta_CE > 0.5):
@@ -89,6 +131,11 @@ class Model(BaseModel):
         return value
 
     def expected_utility_H(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: q_H, lambda_H, theta_H_bar, value, agent
+        """
         q_H = self.get_model_parameters()['q']
         lambda_H = self.get_model_parameters()['lambda'] + self.get_model_parameters()['eta']
         theta_H_bar = agent.theta_H  # the bar nomenclature is outdated, but i don't want to change all the code
@@ -102,6 +149,11 @@ class Model(BaseModel):
 
     # cr
     def expected_utility_1L(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: a_H, q_H, q_L, lambda_L, theta_H_bar, theta_1L_bar, value, agent
+        """
         # set of local parameters needed to make the computation of the value a bit less cumbersome
         q_H = self.get_model_parameters()['q']
         q_L = q_H
@@ -120,6 +172,11 @@ class Model(BaseModel):
 
     # cr + ic
     def expected_utility_2L(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: a_H, q_H, q_L, lambda_L, theta_H_bar, theta_2LN_bar, theta_2LD_bar, value, agent
+        """
         # set of local parameters needed to make the computation of the value a bit less cumbersome
         q_H = self.get_model_parameters()['q']
         q_L = q_H
@@ -143,6 +200,11 @@ class Model(BaseModel):
 
     # ce
     def expected_utility_5(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: q_H, q_L, lamb, theta_bar, value, agent
+        """
         # set of local parameters needed to make the computation of the value a bit less cumbersome
         q_H = self.get_model_parameters()['q']
         q_L = q_H
@@ -158,6 +220,11 @@ class Model(BaseModel):
 
     # ce + ic
     def expected_utility_6(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: q_H, q_L, lamb, theta_bar, value, agent
+        """
         # set of local parameters needed to make the computation of the value a bit less cumbersome
         q_H = self.get_model_parameters()['q']
         q_L = q_H
@@ -176,20 +243,36 @@ class Model(BaseModel):
     # -----------------------------------------------------------------------
 
     def calculate_EUA(self, agent):
+        """
+        Class variables: 
+        Local variables: EUA, agent
+        """
         EUA = self.expected_utility_A(agent)
         return EUA
 
     def calculate_EUCE(self, agent):
+        """
+        Class variables: 
+        Local variables: EUCE, agent
+        """
         EUCE = self.expected_utility_CE(agent)
         return EUCE
 
     def calculate_EU1(self, agent):
+        """
+        Class variables: 
+        Local variables: EU1_H, EU1_L, EU1, agent
+        """
         EU1_H = self.expected_utility_H(agent)
         EU1_L = self.expected_utility_1L(agent)
         EU1 = 0.5*(EU1_H + EU1_L)
         return EU1
 
     def calculate_EU2(self, agent):
+        """
+        Class variables: 
+        Local variables: theta_2LN_bar, theta_2LD_bar, EU2, EU_H, EU2_L, agent
+        """
         theta_2LN_bar = agent.theta_LN
         theta_2LD_bar = agent.theta_LD
         if (theta_2LN_bar > theta_2LD_bar):
@@ -201,12 +284,24 @@ class Model(BaseModel):
         return EU2
 
     def calculate_EU5(self, agent):
+        """
+        Class variables: 
+        Local variables: agent
+        """
         return self.expected_utility_5(agent)
 
     def calculate_EU6(self, agent):
+        """
+        Class variables: 
+        Local variables: agent
+        """
         return self.expected_utility_6(agent)
     
     def calculate_EU_test(self, agent):
+        """
+        Class variables: 
+        Local variables: EU1, agent
+        """
         EU1 = agent.state_variables['d1'] + agent.state_variables['y'] - agent.state_variables['b']
         return EU1
 
@@ -216,6 +311,12 @@ class Model(BaseModel):
     #
     # -----------------------------------------------------------------------
     def find_optimum(self, agent):
+        """
+        Global variables: nan
+        Class variables: 
+        Local variables: agent, d1, d1_lower, d1_upper, step_d1, y, y_lower, y_upper, step_y,
+        Local variables: b, b_lower, b_upper, step_b, maxA, max1, max2, max5, max6, EUA, EU1, EU2, EU5, EU6
+        """
         global nan
         nan = 10000000000000000.0
 
@@ -291,6 +392,10 @@ class Model(BaseModel):
     # do_update
     # =======================================================================
     def do_update(self):
+        """
+        Class variables: agents, steps_per_state_variable
+        Local variables: agent, optimum
+        """
         # equilibrium is symmetric, i.e. we only require one agent
         agent = self.agents[0]
 

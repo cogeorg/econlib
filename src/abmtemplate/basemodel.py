@@ -11,6 +11,9 @@ import abc
 #
 # -------------------------------------------------------------------------
 class BaseModel(object):
+    """
+    Class variables: __metaclass__, identifier, model_parameters, agents, interactions
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -18,6 +21,10 @@ class BaseModel(object):
         return
     @abc.abstractmethod
     def set_identifier(self, _identifier):
+        """
+        Class variables: identifier
+        Local variables: _identifier
+        """
         if not isinstance(_identifier, str):
             raise TypeError
         else:
@@ -30,6 +37,10 @@ class BaseModel(object):
         return
     @abc.abstractmethod
     def set_model_parameters(self, _params):
+        """
+        Class variables: model_parameters
+        Local variables: _params
+        """
         if not isinstance(_params, dict):
             raise TypeError
         else:
@@ -42,6 +53,10 @@ class BaseModel(object):
         return
     @abc.abstractmethod
     def set_agents(self, _agents):
+        """
+        Class variables: agents
+        Local variables: _agents
+        """
         if not isinstance(_agents, list):
             raise TypeError
         else:
@@ -54,6 +69,10 @@ class BaseModel(object):
         return
     @abc.abstractmethod
     def set_interactions(self, _interactions):
+        """
+        Class variables: interactions
+        Local variables: _interactions
+        """
         self.interactions = _interactions
         return
     interactions = abc.abstractproperty(get_interactions, set_interactions)
@@ -61,6 +80,10 @@ class BaseModel(object):
 
     @abc.abstractmethod
     def __str__(self):
+        """
+        Class variables: identifier, model_parameters, agents, interactions
+        Local variables: ret_str, entry, value, agent
+        """
         ret_str = "<model identifier='" + self.identifier + "'>\n"
         for entry in self.model_parameters:
             value = self.model_parameters[entry]
@@ -79,6 +102,10 @@ class BaseModel(object):
 
     @abc.abstractmethod
     def __init__(self, model_config):
+        """
+        Class variables: 
+        Local variables: _params, model_config
+        """
         _params = model_config.static_parameters
 
         self.set_identifier(model_config.identifier)
@@ -104,6 +131,10 @@ class BaseModel(object):
 
     @abc.abstractmethod
     def get_agent_by_id(self, _id):
+        """
+        Class variables: 
+        Local variables: _id
+        """
         pass
 
     @abc.abstractmethod

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from abmtemplate.baseconfig import BaseConfig
 
+
 class Config(BaseConfig):
     """
     Class variables: identifier, static_parameters, variable_parameters

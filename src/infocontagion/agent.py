@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 from abmtemplate.baseagent import BaseAgent
+import math
 
 class Agent(BaseAgent):
     """
@@ -41,7 +42,6 @@ class Agent(BaseAgent):
         """
         super(Agent, self).set_state_variables(_value)
 
-
     def __init__(self, _identifier, _params, _variables):
         """
         Class variables: parameters, state_variables
@@ -57,7 +57,6 @@ class Agent(BaseAgent):
         """
         ret_str = super(Agent, self).__str__()
         return ret_str
-
 
     def calculate_theta_A(self):
         """
@@ -89,7 +88,6 @@ class Agent(BaseAgent):
             value = 1.0
         return value
 
-
     def calculate_theta_H(self):
         """
         Class variables: u_d_H, u_HB, u_HG
@@ -112,8 +110,8 @@ class Agent(BaseAgent):
         """
         a_H = self.get_parameters()['q']*self.calculate_theta_H()
         try:
-            value = ( a_H*(self.u_d_LD-self.u_LBD) + (1.0-a_H)*(self.u_d_LN-self.u_LBN) ) / \
-                    ( a_H*(self.u_LGD-self.u_LBD) + (1.0-a_H)*(self.u_LGN-self.u_LBN) )
+            value = (a_H*(self.u_d_LD-self.u_LBD) + (1.0-a_H)*(self.u_d_LN-self.u_LBN)) / \
+                    (a_H*(self.u_LGD-self.u_LBD) + (1.0-a_H)*(self.u_LGN-self.u_LBN))
         except:
             value = 0.0
         if (value < 0.0):
@@ -144,8 +142,8 @@ class Agent(BaseAgent):
         """
         q_H = self.get_parameters()['q']
         try:
-            value = ( q_H*(self.u_d_LD - self.u_LBD) + (1.0 - q_H)*(self.u_d_LN - self.u_LBN) ) / \
-                    ( q_H*(self.u_LGD - self.u_LBD) + (1.0 - q_H)*(self.u_LGN - self.u_LBN) )
+            value = (q_H*(self.u_d_LD - self.u_LBD) + (1.0 - q_H)*(self.u_d_LN - self.u_LBN)) / \
+                    (q_H*(self.u_LGD - self.u_LBD) + (1.0 - q_H)*(self.u_LGN - self.u_LBN))
         except:
             value = 0.0
         if (value < 0.0):
@@ -168,7 +166,6 @@ class Agent(BaseAgent):
         if (value > 0.5):
             value = 0.5
         return value
-
 
     def compute_ancillary_variables(self, R, beta, lamb, phi, eta):
         """
@@ -250,11 +247,10 @@ class Agent(BaseAgent):
 
         self.theta = self.calculate_theta()
 
-
     def compute_utility(self, _consumption):
         """
         Global variables: nan
-        Class variables: 
+        Class variables:
         Local variables: _consumption, _value, rho
         """
         _value = None
@@ -264,12 +260,12 @@ class Agent(BaseAgent):
         rho = self.get_parameters()['rho']
 
         if (_consumption < 0.0):
-            #print "ERROR: consumption negative: " + str(consumption)
+            # print "ERROR: consumption negative: " + str(consumption)
             return -nan
         else:
-            if (rho == 0.0): # just for debugging
+            if (rho == 0.0):  # just for debugging
                 _value = _consumption
-            if (rho == 1.0): # just for debugging
+            if (rho == 1.0):  # just for debugging
                 try:
                     _value = math.log(_consumption)
                 except:
@@ -277,10 +273,8 @@ class Agent(BaseAgent):
             else:
                 # CRRA with rho > 1.0 produces negative utility for consumption < 1.0
                 try:
-                    _value = (pow(_consumption,(1.0-rho)))/(1.0-rho)
+                    _value = (pow(_consumption, (1.0-rho)))/(1.0-rho)
                 except:
                     _value = -nan
 
         return _value
-
-

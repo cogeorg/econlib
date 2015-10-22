@@ -66,8 +66,11 @@ class File(object):
                 i += 1
             else:
                 out_file_name = file_identifier + "-" + str(num_file) + "." + file_extension
+                print out_file_name
                 out_file = open(out_file_name, 'w')
                 out_file.write(out_text)
                 out_file.close()
+
+                out_text = ""  # reset out_text
                 num_file += 1  # increase file count
                 i = 0 # and reset line count

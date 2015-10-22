@@ -71,14 +71,7 @@ class DirtyString(object):
 
         # Remove if not possible
         except UnicodeDecodeError:
-<<<<<<< HEAD
             a_clean_string = "".join(i for i in a_dirty_string if ord(i)<128)
-=======
-            aCleanString = "".join(i if ord(i)<128 else ' ' for i in aDirtyString)
-
-        return aCleanString
-    #-------------------------------------------------------------------------
->>>>>>> a5db3672665dcb7f75625102f3c67470052f2866
 
         return a_clean_string
     # -------------------------------------------------------------------------
@@ -97,7 +90,6 @@ class DirtyString(object):
             a_clean_string (str) -- the string without interpunctuation
         """
         # Some characters are out of range
-<<<<<<< HEAD
         a_cleaner_string = a_dirty_string.replace("Ø","O").replace("ø", "o")
         a_cleaner_string = a_cleaner_string.replace("Æ","AE").replace("æ", "ae")
         a_cleaner_string = a_cleaner_string.replace("Ð","D").replace("ð", "d")
@@ -107,14 +99,3 @@ class DirtyString(object):
 
         return a_clean_string
     # -------------------------------------------------------------------------
-=======
-        aCleanerString = aDirtyString.replace("Ø","O").replace("ø", "o")
-        aCleanerString = aCleanerString.replace("Æ","AE").replace("æ", "ae")
-        aCleanerString = aCleanerString.replace("Ð","D").replace("ð", "d")
-        aCleanerString = aCleanerString.replace("Þ","TH").replace("þ", "th")
-        aCleanerString = aCleanerString.replace("Œ","OE").replace("œ", "oe")
-        aCleanString = aCleanerString.replace("ß","sz").replace("ƒ", "f")
-
-        return aCleanString
-    #-------------------------------------------------------------------------
->>>>>>> a5db3672665dcb7f75625102f3c67470052f2866

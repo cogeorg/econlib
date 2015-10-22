@@ -62,7 +62,7 @@ class File(object):
         out_text = ""
         for line in input_file.readlines():
             if i < lines_to_read:
-                out_text += line + "\n"
+                out_text += line
                 i += 1
             else:
                 out_file_name = file_identifier + "-" + str(num_file) + "." + file_extension

@@ -129,16 +129,18 @@ class Mapping(object):
         original_string = original_string.upper().strip()
 
         # special characters should be removed from all strings
-        special_characters = ['/', ',', '\'', '“', '”', '\?', '\.', '\"', '-']
+        special_characters = ['/', ',', '\'', '“', '”', '\?', '\.', '\"', '-', '\(', '\)', '\&']
         for special_character in special_characters:
             original_string = re.sub(special_character, '', original_string)
 
-        # replace whitespace
-        original_string = re.sub(' ', '_', original_string)
-
-        # actually remove redundant strings
+        # remove redundant strings
         for redundant_string in redundant_strings:
             original_string = re.sub(redundant_string, '', original_string)
+
+        # replace whitespace
+        original_string = re.sub('   ', ' ', original_string)
+        original_string = re.sub('  ', ' ', original_string)
+        original_string = re.sub(' ', '_', original_string)
 
         return original_string
     #-------------------------------------------------------------------------

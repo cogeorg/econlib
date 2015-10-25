@@ -12,6 +12,8 @@ from math import sqrt
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 
+from dirtystringtools import DirtyString
+
 
 #-------------------------------------------------------------------------
 #
@@ -124,23 +126,17 @@ class Mapping(object):
         - The uppercase version of each redundant string is also automatically removed
 
         """
+        dirtystring = DirtyString()
 
-        # all in upper case letters
-        original_string = original_string.upper().strip()
-
-        # special characters should be removed from all strings
-        special_characters = ['/', ',', '\'', '“', '”', '\?', '\.', '\"', '-', '\(', '\)', '\&']
-        for special_character in special_characters:
-            original_string = re.sub(special_character, '', original_string)
+        original_string = dirtystring.standardize(original_string.upper())
+        original_string = dirtystring.normalize(original_string)
+        #original_string = dirtystring.translit_nordic(original_string)  # TODO: for some reason this throws UniDecodeError sometimes
 
         # remove redundant strings
         for redundant_string in redundant_strings:
+            redundant_string = dirtystring.standardize(redundant_string)  # this assumes that the to and from strings
+            redundant_string = dirtystring.normalize(redundant_string)    # are also standardized
             original_string = re.sub(redundant_string, '', original_string)
-
-        # replace whitespace
-        original_string = re.sub('   ', ' ', original_string)
-        original_string = re.sub('  ', ' ', original_string)
-        original_string = re.sub(' ', '_', original_string)
 
         return original_string
     #-------------------------------------------------------------------------
@@ -189,19 +185,20 @@ class Mapping(object):
     #   threshold_fuzziness
     #   )
     #-------------------------------------------------------------------------
-    def find_best_match(self,
-                        matching_string,
-                        original_strings,
+    def find_best_match_between_files(self,
+                        from_dict_entry,
+                        to_dict,
                         number_of_fuzzy_options,
                         threshold_fuzziness,
+                        use_frequency=None,
                         debug=None
     ):
         """
-        Finds the best match of a string in an array of strings
+        Finds the best match of a from_string in an array of to_strings
 
         Args:
-            matching_string (str) -- the string that is to be matched
-            original_strings (list) -- the list of strings from which the best match is to be found
+            from_dict_entry (str) -- the {string: frequency} that is to be matched
+            to_dict (dict) -- the dict of {strings: frequency} from which the best match is to be found
             number_of_fuzzy_options (int) -- the number of alternatives of the matching_string fuzzywuzzy should find in the original_strings
             threshold_fuzziness (int) -- the lower threshold for the precision of fuzzy matches
 
@@ -212,28 +209,26 @@ class Mapping(object):
 
 
         """
+        to_strings = list(to_dict.keys())
 
-        # the possible matches are the original_strings array reduced by the
-        # string we are trying to match
-        reduced_original_strings = list(original_strings)
-        reduced_original_strings.remove(matching_string)
 
         # find fuzzy matches in the reduced list of all entries
         matching_options = process.extract(
-            matching_string,
-            reduced_original_strings,
+            from_dict_entry[0],
+            to_strings,  # we need the list of to_strings here only, the frequencies are used later
             limit=number_of_fuzzy_options
         )
 
         # we start with the original string
-        original_frequency = original_strings[matching_string]
+        best_match = from_dict_entry[0]  # if we don't find a better match, return original string
         best_match_precision = 0.0  # original string is not in the reduced list of all entries
-        best_match = matching_string
+        best_match_fuzziness = 0
+        original_frequency = int(from_dict_entry[1])
 
         # the best matching option is found by checking fuzziness and relative frequency of all matches
         for matching_option in matching_options:
             match_fuzziness = matching_option[1]
-            match_frequency = original_strings[matching_option[0]]
+            match_frequency = to_dict[matching_option[0]]
 
             # we replace a name with a similar name only if the similar name
             # has a higher frequency; we also check that we only consider
@@ -242,14 +237,24 @@ class Mapping(object):
             matching_precision = match_fuzziness/100.0*match_frequency - original_frequency
 
             # finally, do the comparison by finding best match and checking that fuzziness is above some threshold
-            if matching_precision > best_match_precision and match_fuzziness > threshold_fuzziness:
-                best_match_precision = matching_precision
-                best_match = matching_option[0]
+            if use_frequency:  # in this case matching is done on precision, while only controlling for fuzziness
+                if matching_precision > best_match_precision and match_fuzziness > threshold_fuzziness:
+                    best_match_precision = matching_precision
+                    best_match = matching_option[0]
+            else:  # in this case matching is done based on fuzziness
+                if match_fuzziness > best_match_fuzziness and match_fuzziness > threshold_fuzziness:
+                    best_match_fuzziness = match_fuzziness
+                    best_match = matching_option[0]
 
-            if debug:  # debug
-                print matching_string + "[" + str(original_frequency) + "] vs.", matching_option, "-->", best_match, best_match_precision
+            if debug and use_frequency:  # debug
+                print from_dict_entry[0] + "[" + str(original_frequency) + "] vs.", matching_option, "-->", best_match, best_match_precision
+            if debug and not use_frequency:
+                print from_dict_entry[0], "vs.", matching_option, "-->", best_match, best_match_fuzziness
 
-        return best_match
+            if not use_frequency:  # if we don't use the precision, return best_match_fuzziness
+                best_match_precision = best_match_fuzziness
+
+        return [best_match, best_match_precision]
     #-------------------------------------------------------------------------
 
 
@@ -260,7 +265,6 @@ class Mapping(object):
     #   number_of_fuzzy_options,
     #   threshold_fuzziness
     #   )
-    #
     #-------------------------------------------------------------------------
     def find_best_match_tuple(self,
                         matching_tuple,
@@ -333,4 +337,30 @@ class Mapping(object):
                 print matching_tuple, original_tuple, matching_frequency, entry_frequency, best_match, best_distance
 
         return [best_match, best_distance]
+    #-------------------------------------------------------------------------
+
+
+    #-------------------------------------------------------------------------
+    # write_reduced_from_strings(out_file_name)
+    #-------------------------------------------------------------------------
+    def write_reduced_from_strings(self, out_file_name):
+        """
+        Writes the reduced from string array to out_file
+
+        Args:
+            out_file_name (str) -- the name of the output file
+
+        Returns:
+
+        Note:
+
+        """
+        out_file = open(out_file_name, 'w')
+        out_text = ""
+
+        for key in self.reduced_from_strings.keys():
+            out_text += key+ ";" + str(self.reduced_from_strings[key]) + "\n"
+
+        out_file.write(out_text)
+        out_file.close()
     #-------------------------------------------------------------------------

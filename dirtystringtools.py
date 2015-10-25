@@ -35,8 +35,15 @@ class DirtyString(object):
             unicode characters until ordinal number 128
         """
 
+        # Remove extra whitespaces
+        while "  " in a_dirty_string:
+            a_dirty_string = a_dirty_string.replace("  ", " ")
+        # replace _ with whitespace to keep syntactic structure of string
+        a_dirty_string = a_dirty_string.replace("_", " ")
+
         # Remove ASCII Punctuation & Symbols
-        a_cleaner_string = "".join(i for i in a_dirty_string if not 32<=ord(i)<=47)
+        # Note: we keep whitespaces because we want to keep the syntactic structure of the string
+        a_cleaner_string = "".join(i for i in a_dirty_string if not 33 <= ord(i) <= 47)
 
         # Remove ASCII Punctuation & Symbols, part I
         a_cleaner_string = "".join(i for i in a_cleaner_string if not 58<=ord(i)<=64)
@@ -46,6 +53,9 @@ class DirtyString(object):
 
         # Remove ASCII Punctuation & Symbols, part III
         a_clean_string = "".join(i for i in a_cleaner_string if not 123<=ord(i)<=126)
+
+        # Change whitespace to underscore
+        a_clean_string = a_clean_string.replace(" ", "_")
 
         return a_clean_string
     # -------------------------------------------------------------------------

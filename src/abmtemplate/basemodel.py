@@ -103,7 +103,7 @@ class BaseModel(object):
     @abc.abstractmethod
     def __init__(self, model_config):
         """
-        Class variables: 
+        Class variables:
         Local variables: _params, model_config
         """
         _params = model_config.static_parameters
@@ -132,7 +132,7 @@ class BaseModel(object):
     @abc.abstractmethod
     def get_agent_by_id(self, _id):
         """
-        Class variables: 
+        Class variables:
         Local variables: _id
         """
         pass

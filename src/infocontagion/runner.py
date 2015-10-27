@@ -6,13 +6,33 @@ from pprint import pprint
 
 from src.infocontagion.config import Config
 from src.infocontagion.model import Model
+from abmtemplate.baserunner import BaseRunner
 
 
-class Runner(object):
+class Runner(BaseRunner):
     """
     Class variables: identifier, num_simulations, model_config_template, model_config, results, output_file_name
     """
     identifier = ""
+    num_simulations = 0
+
+    def get_identifier(self):
+        return self.identifier
+    def set_identifier(self, _value):
+        """
+        Class variables: identifier
+        Local variables: _identifier
+        """
+        super(Runner, self).set_identifier(_value)
+
+    def get_num_simulations(self):
+        return self.num_simulations
+    def set_num_simulations(self, _value):
+        """
+        Class variables: num_simulations
+        Local variables: _num_simulations
+        """
+        super(Runner, self).set_num_simulaitons(_value)
 
     def __init__(self, config):
         """

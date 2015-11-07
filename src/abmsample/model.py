@@ -3,7 +3,7 @@
 
 import math
 
-from abmtemplate.basemodel import BaseModel
+from basemodel import BaseModel
 
 from config import Config
 from agent import Agent

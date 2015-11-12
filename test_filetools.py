@@ -15,7 +15,7 @@ if __name__ == '__main__':
 #
     import sys
 
-    from filetools import File
+    from src.filetools import File
 
     args = sys.argv
 
@@ -34,4 +34,3 @@ if __name__ == '__main__':
         file = File()
 
         file.split_file(input_file_name, num_lines, num_files)
-

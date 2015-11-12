@@ -17,7 +17,7 @@ Date of last update: 12-09-2015 (Cape Town)
 import sys
 import math
 
-from conftools import Config
+from src.conftools import Config
 
 # ---------------------------------------------------------------------------
 #

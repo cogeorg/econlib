@@ -16,7 +16,7 @@ if __name__ == '__main__':
     import sys
     import pprint
 
-    import iotools
+    import src.iotools as iotools
 
     # we have multiple tests here, the first argument specifies which test
     # to run
@@ -48,7 +48,6 @@ if __name__ == '__main__':
 
         pprint.pprint(german_peace_nobel_laureates_nested)
 
-
     #
     # TEST 2: output nested dictionary to csv
     #
@@ -77,4 +76,3 @@ if __name__ == '__main__':
         pprint.pprint(largest_countries_eu)
 
         iotools.nested_dict_to_csv(largest_countries_eu, output_name, "country")
-

@@ -11,7 +11,7 @@ import networkx as nx
 
 from math import sqrt
 
-from node import Node
+from src.node import Node
 
 
 

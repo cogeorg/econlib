@@ -12,7 +12,7 @@ from math import sqrt
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 
-from dirtystringtools import DirtyString
+from src.dirtystringtools import DirtyString
 
 
 #-------------------------------------------------------------------------

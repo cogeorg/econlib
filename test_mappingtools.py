@@ -15,7 +15,7 @@ if __name__ == '__main__':
 #
     import sys
 
-    from mappingtools import Mapping
+    from src.mappingtools import Mapping
 
     args = sys.argv
 

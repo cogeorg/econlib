@@ -20,7 +20,7 @@ if __name__ == '__main__':
 #
     args = sys.argv
 
-    from networktools import Network
+    from src.networktools import Network
 
     test_number = args[1]
     network_file_name = args[2]

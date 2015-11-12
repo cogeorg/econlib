@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from abmtools import ABMTools
+from src.abmtools import ABMTools
 
 
 """
@@ -117,7 +117,7 @@ Test 4:
 """
 if test_number == "4":
     # imports besides abmtools
-#    from conftools import Config
+    from src.conftools import Config
 
     # we have a second parameter
     config_file_name = args[2]
@@ -132,17 +132,16 @@ if test_number == "4":
 """
 TEST 5:
 """
-if test_number == "5":
-    import random
-
-    from src.abmimplementation.config import Config
-    from src.abmimplementation.runner import Runner
-
-    runner_config_file_name = sys.argv[2]
-
-    runner_config = Config()
-    runner_config.read_xml_config_file(runner_config_file_name)
-
-    runner = Runner(runner_config)
-    runner.do_run()
-
+#if test_number == "5":
+#    import random
+#
+#    from src.abmimplementation.config import Config
+#    from src.abmimplementation.runner import Runner
+#
+#    runner_config_file_name = sys.argv[2]
+#
+#   runner_config = Config()
+#    runner_config.read_xml_config_file(runner_config_file_name)
+#
+#    runner = Runner(runner_config)
+#    runner.do_run()

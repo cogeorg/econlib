@@ -15,7 +15,7 @@ if __name__ == '__main__':
 #
     import sys
 
-    from conftools import Config
+    from src.conftools import Config
 
     args = sys.argv
     config_file_name = args[1]

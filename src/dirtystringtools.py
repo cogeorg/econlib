@@ -12,7 +12,7 @@ import unicodedata
 #
 # -------------------------------------------------------------------------
 class DirtyString(object):
-    __version__ = 0.11
+    __version__ = 0.12
 
     #
     #  METHODS
@@ -87,25 +87,30 @@ class DirtyString(object):
     # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
-    # translit_nordic(a_dirty_string)
+    # translit_nordic(ascii_string)
     # -------------------------------------------------------------------------
-    def translit_nordic(self, a_dirty_string):
+    def translit_nordic(self, ascii_string):
         """
-        Replaces characters used in nordic languages not covered by normalize()
+        Replaces characters used in nordic languages. These characters are not
+        in UTF-8 and will get lost when decoding. This is only meaningfull
+        in python 2.
 
         Args:
-            a_dirty_string (str) -- the string to be cleaned
+            ascii_string (str) -- the string to be cleaned, ascii formatted
 
         Returns:
-            a_clean_string (str) -- the string without interpunctuation
+            a_clean_string (str) -- the string without replaced characters
         """
-        # Some characters are out of range
-        a_cleaner_string = a_dirty_string.replace("Ø","O").replace("ø", "o")
-        a_cleaner_string = a_cleaner_string.replace("Æ","AE").replace("æ", "ae")
-        a_cleaner_string = a_cleaner_string.replace("Ð","D").replace("ð", "d")
-        a_cleaner_string = a_cleaner_string.replace("Þ","TH").replace("þ", "th")
-        a_cleaner_string = a_cleaner_string.replace("Œ","OE").replace("œ", "oe")
-        a_clean_string = a_cleaner_string.replace("ß","sz").replace("ƒ", "f")
+        
+        if not isinstance(ascii_string, str):
+            raise ValueError('Expects an ascii encoded string')
+
+        a_cleaner_string = ascii_string.replace('\xc3\x98','O').replace('ø', 'o')
+        a_cleaner_string = a_cleaner_string.replace('\xc3\x86','AE').replace('\xc3\xa6', 'ae')
+        a_cleaner_string = a_cleaner_string.replace('\xc3\x90','D').replace('\xc3\xb0', 'd')
+        a_cleaner_string = a_cleaner_string.replace('\xc3\x9e','TH').replace('\xc3\xbe', 'th')
+        a_cleaner_string = a_cleaner_string.replace('\xc5\x92','OE').replace('\xc5\x93', 'oe')
+        a_clean_string = a_cleaner_string.replace('\xc3\x9f','sz').replace('\xc6\x92', 'f')
 
         return a_clean_string
     # -------------------------------------------------------------------------

@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
 
 import sys
 import logging
 import re
-
 
 
 #-------------------------------------------------------------------------
@@ -17,14 +13,12 @@ import re
 class Node(object):
     __version__ = 0.9
 
-
 #
 # VARIABLES
 #
     identifier = ""
     in_degree = 0
     out_degree = 0
-
 
 #
 # METHODS

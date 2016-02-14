@@ -1,18 +1,12 @@
-#!/usr/bin/env python2.7
-# -*- coding: utf-8 -*-
-
 """
 Robustness check for Agent-Based Models (conceivably other models as well) across the whole of the multidimensional
 parameter space.
 
-Author: Pawel Fiedor (pawel@fiedor.eu)
-        Co-Pierre Georg (cogeorg@gmail.com)
-
-Version: 0.1
-
 Date of last update: 04-09-2015 (Cape Town)
-
 """
+__author__ = '\n'.join(["Pawel Fiedor (pawel@fiedor.eu)",
+                        "Co-Pierre Georg (cogeorg@gmail.com)"])
+__version__ = 0.1
 
 # Libraries
 import sys
@@ -24,12 +18,6 @@ import math
 import csv
 import time
 import glob
-
-# ---------------------------------------------------------------------------
-#
-# CLASS ABMTools
-#
-# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 #
@@ -103,6 +91,7 @@ class ABMTools(object):
                 out_rows.append(int_row)
             csvWriter.writerows(out_rows)
 
+
     # Not used, created for testing [adds more details than the standard one below]
     def write_output_mult_full(self, FileName, out_got, max_d):
         with open(FileName, 'w', newline='') as f:
@@ -122,26 +111,24 @@ class ABMTools(object):
                 out_rows.append(int_row)
             csvWriter.writerows(out_rows)
 
+
     # Writes CSV file with the data needed to collate results from parallel runs [case for single output]
     def write_output_one(self, FileName, inter, leng):
         with open(FileName, 'w', newline='') as f:
             csvWriter = csv.writer(f, lineterminator='\n')
             csvWriter.writerow(['Aggregate sample difference', "Sample size"])
-            out_row = []
-            out_row.append(inter)
-            out_row.append(leng)
+            out_row = [inter, leng]
             csvWriter.writerow(out_row)
+
 
     # Writes CSV file with the data needed to collate results from parallel runs [case for multiple outputs]
     def write_output_mult(self, FileName, inter, max_e, leng):
         with open(FileName, 'w', newline='') as f:
             csvWriter = csv.writer(f, lineterminator='\n')
             csvWriter.writerow(['Aggregate sample difference', 'Max Euclidean difference', "Sample size"])
-            out_row = []
-            out_row.append(inter)
-            out_row.append(max_e)
-            out_row.append(leng)
+            out_row = [inter, max_e, leng]
             csvWriter.writerow(out_row)
+
 
     # Writes CSV file with all the results obtained from running the script so the distibution of the results can be analysed externally (R+ggplot2 presumably)
     def write_output_all_one(self, FileName, reslts):
@@ -152,6 +139,7 @@ class ABMTools(object):
                 out_row = []
                 out_row.append(reslts[x])
                 csvWriter.writerow(out_row)
+
 
     # Writes CSV file with all the results obtained from running the script so the distibution of the results can be analysed externally (R+ggplot2 presumably)
     def write_output_all_mult(self, FileName, reslts):
@@ -167,13 +155,12 @@ class ABMTools(object):
                     out_row.append(reslts[x][y])
                 csvWriter.writerow(out_row)
 
+
     # Gets the config of the csv file
     def getDialect(self, aFile):
 
-        #import csv
-        csvDialect = csv.Sniffer().sniff(aFile.readline())
+        return = csv.Sniffer().sniff(aFile.readline())
 
-        return csvDialect
 
     # Reads the CSV file into needed data [one dimension]
     def read_output_one(self, FileName):
@@ -182,10 +169,8 @@ class ABMTools(object):
             f.seek(0)
             csvReader = csv.reader(f, dialect=csvDialect)
             next(csvReader, None)
-            outp = []
-            for row in csvReader:
-                outp.append(row)
-            return outp
+            return [row for row in csvReader]
+
 
     # Reads the CSV file into needed data [multiple dimensions - these are actually the same for our purposes, but in principle could be different]
     def read_output_mult(self, FileName):
@@ -194,10 +179,8 @@ class ABMTools(object):
             f.seek(0)
             csvReader = csv.reader(f, dialect=csvDialect)
             next(csvReader, None)
-            outp = []
-            for row in csvReader:
-                outp.append(row)
-            return outp
+            return [row for row in csvReader]
+
 
     def read_config(self, FileName):
         """
@@ -367,9 +350,6 @@ class ABMTools(object):
         funct_name = input("Enter the name of fuction to be called inside the script: ")
 
 
-#
-# WORKER METHODS
-#
     """
     abmgoodness
     """
@@ -606,9 +586,6 @@ class ABMTools(object):
         self.initialize_run_parameters(config)
         # at this point, we have static parameters with the number of runs and the model config file
 
-
         for entry in self.run_parameters:
             print entry
         print self.num_simulations, len(self.run_parameters)
-
-

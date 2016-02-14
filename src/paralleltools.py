@@ -1,22 +1,14 @@
-#!/usr/bin/env python2.7
-# -*- coding: utf-8 -*-
-
 """
 Robustness check for Agent-Based Models (conceivably other models as well) across the whole of the multidimensional
 parameter space.
 
-Author: Co-Pierre Georg (cogeorg@gmail.com)
-
-Version: 0.1
-
 Date of last update: 12-09-2015 (Cape Town)
-
 """
+__author__ = """Co-Pierre Georg (cogeorg@gmail.com)"""
+__version__ = 0.1
 
 # Libraries
-import sys
 import math
-
 from src.conftools import Config
 
 # ---------------------------------------------------------------------------
@@ -40,6 +32,7 @@ class Parallel(object):
         self.num_cores = 0
         self.runs_per_core = 0
         self.runs_last_core = 0
+
 
     def create_parallel_config_file(self, control_config, template_config, counter):
         # the number of runs depends on the core we look at
@@ -71,6 +64,7 @@ class Parallel(object):
         if num_runs != 0:
             return out_str
 
+
     def create_config_files(self, config_file_name):
         # first, read the config file to find out the number of cores, etc.
         control_config = Config()
@@ -98,6 +92,5 @@ class Parallel(object):
             # write the output file
             if out_str != None:
                 output_file_name = control_config.static_parameters['output_basefile_name'] + "-" + str(i) + ".xml"
-                output_file = open(output_file_name, "w")
-                output_file.write(out_str)
-                output_file.close()
+                with open(output_file_name, "w") as f:
+                    f.write(out_str)

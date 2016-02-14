@@ -5,7 +5,7 @@ __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
 
 #-------------------------------------------------------------------------
 #
-#  conftools.py is a simple module to manage .xml configuration files
+#  filetools.py is a collection of tools to manage files
 #
 #-------------------------------------------------------------------------
 if __name__ == '__main__':

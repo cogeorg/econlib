@@ -1,57 +1,35 @@
-#!/usr/bin/env python2.7
-# -*- coding: utf-8 -*-
-
 __author__ = """Co-Pierre Georg (co-pierre.georg@uct.ac.za)"""
-
-import sys
-import logging
-import re
-
 from math import ceil
-
 
 #-------------------------------------------------------------------------
 #
-#  class Mapping
+#  class File
 #
 #-------------------------------------------------------------------------
 class File(object):
-    __version__ = 0.9
-
-
-#
-# VARIABLES
-#
-    identifier = ""
-
+    __version__ = 0.91
 
 #
 #  METHODS
 #
-    #-------------------------------------------------------------------------
-    #  __init__
-    #-------------------------------------------------------------------------
     def __init__(self):
         pass
-    #-------------------------------------------------------------------------
 
-
-    """
-    This method reads in a large file with a predetermined number of lines and splits
-    it into several smaller files.
-    """
     def split_file(self, input_file_name, _num_lines, _num_files):
+        """
+        Read in a large file with a predetermined number of lines and split it
+        into several smaller files.
+        """
         num_lines = int(_num_lines)
         num_files = int(_num_files)
-
-        input_file = open(input_file_name, "r")
-        file_identifier = input_file_name.split('.')[0]  # used for input and output file name
-        file_extension = input_file_name.split('.')[1]
-        if len(input_file_name.split('.')) > 2:
+        if input_file_name.count('.')>1:
             raise AssertionError("File name must contain only a single . as separator between identifier and extension.")
             exit
 
+        file_identifier, file_extension = input_file_name.split('.') # used for input and output file name
+
         lines_to_read = ceil(num_lines/num_files)
+        print lines_to_read
 
         #
         # read all lines in the input file, every so often, write them into a new output file
@@ -60,17 +38,16 @@ class File(object):
         num_file = 0
 
         out_text = ""
-        for line in input_file.readlines():
-            if i < lines_to_read:
-                out_text += line
-                i += 1
-            else:
-                out_file_name = file_identifier + "-" + str(num_file) + "." + file_extension
-                print out_file_name
-                out_file = open(out_file_name, 'w')
-                out_file.write(out_text)
-                out_file.close()
-
-                out_text = ""  # reset out_text
-                num_file += 1  # increase file count
-                i = 0 # and reset line count
+        with open(input_file_name,'r') as input_file:
+            for line in input_file.readlines():
+                if i < lines_to_read:
+                    out_text += line
+                    i += 1
+                else: # Write out and reset
+                    out_file_name = "{}-{}.{}".format(file_identifier, num_file, file_extension)
+                    with open(out_file_name,'w') as f:
+                        f.write(out_text)
+                    print out_file_name, "saved"
+                    out_text = ""
+                    num_file += 1
+                    i = 0

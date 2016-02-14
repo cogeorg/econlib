@@ -28,7 +28,7 @@ def csv_to_dict(filename,key_func,value_func,skip_header=True):
     """
     aDict = {}
     with open(filename, 'r') as f:
-        dialect = csv.Sniffer().sniff(aFile.readline())
+        dialect = csv.Sniffer().sniff(f.readline())
         f.seek(0)
         csvReader = csv.reader(f, dialect=dialect)
         if skip_header: next(csvReader, None)
@@ -53,11 +53,11 @@ def csv_to_nested_dict(filename,key_func,ordered=False):
     -------
     dictionary object or ordered dictionary object
     """
-    with open(filename, 'r') as f:
-        dialect = csv.Sniffer().sniff(aFile.readline())
+    with open(filename,'r') as f:
+        dialect = csv.Sniffer().sniff(f.readline())
         f.seek(0)
-        csvReader = csv.reader(f, dialect=dialect)
         if ordered:
+            csvReader = csv.reader(f, dialect=dialect)
             from collections import OrderedDict
             aDict = OrderedDict()
             fields = next(csvReader)
@@ -66,6 +66,7 @@ def csv_to_nested_dict(filename,key_func,ordered=False):
                 key = key_func(temp)
                 aDict[key] = temp
         else:
+            csvReader = csv.DictReader(f, dialect=dialect)
             aDict = {}
             for row in csvReader:
                 key = key_func(row)
@@ -89,4 +90,4 @@ def nested_dict_to_csv(nested_dict,file_name,fields='',header=True):
         if header:
             w.writeheader()
         for k in nested_dict:
-            w.csvWriter({field: out_dict[k].get(field) or k for field in fields})
+            w.writerow({field: nested_dict[k].get(field) or k for field in fields})

@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
 ================
 dirtystringtools
@@ -11,13 +12,13 @@ __all__ = ['standardize', 'normalize', 'translit_nordic']
 __version__ = 0.13
 
 
-def standardize(self, a_dirty_string):
+def standardize(ds):
     """
     Removes interpunctuation and blanks from a string.
 
     Parameters
     ----------
-    a_dirty_string: the string to be cleaned (str)
+    ds: the string to be cleaned
 
     Returns
     -------
@@ -28,32 +29,14 @@ def standardize(self, a_dirty_string):
     The use of normalize() is encouraged, as standardize() only removes
     characters until ordinal number 128.
     """
-    # Remove extra whitespaces
-    while "  " in a_dirty_string:
-        a_dirty_string = a_dirty_string.replace("  ", " ")
-    # replace _ with whitespace to keep syntactic structure of string
-    a_dirty_string = a_dirty_string.replace("_", " ")
+    while "  " in ds:
+        ds = ds.replace("  ", " ")
+    ds = "".join(i for i in ds if not 32<=ord(i)<=47)
+    ds = "".join(i for i in ds if not 58<=ord(i)<=64)
+    ds = "".join(i for i in ds if not 91<=ord(i)<=96)
+    return "".join(i for i in ds if not 123<=ord(i)<=126)
 
-    # Remove ASCII Punctuation & Symbols
-    # Note: we keep whitespaces because we want to keep the syntactic structure of the string
-    a_cleaner_string = "".join(i for i in a_dirty_string if not 33 <= ord(i) <= 47)
-
-    # Remove ASCII Punctuation & Symbols, part I
-    a_cleaner_string = "".join(i for i in a_cleaner_string if not 58<=ord(i)<=64)
-
-    # Remove ASCII Punctuation & Symbols, part II
-    a_cleaner_string = "".join(i for i in a_cleaner_string if not 91<=ord(i)<=96)
-
-    # Remove ASCII Punctuation & Symbols, part III
-    a_clean_string = "".join(i for i in a_cleaner_string if not 123<=ord(i)<=126)
-
-    # Change whitespace to underscore
-    a_clean_string = a_clean_string.replace(" ", "_")
-
-    return a_clean_string
-
-
-def normalize(self, a_dirty_string):
+def normalize(a_dirty_string):
     """
     Returns the normal form of a Unicode string (transliteration). Removes
     characters in case transliteration is not possible.
@@ -72,7 +55,7 @@ def normalize(self, a_dirty_string):
     return a_clean_string
 
 
-def translit_nordic(self, ascii_string):
+def translit_nordic(ascii_string):
     """
     Replaces characters used in nordic languages. These characters are not
     in UTF-8 and will get lost when decoding. This is only meaningfull

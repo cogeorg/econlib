@@ -16,40 +16,21 @@ __author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 #-------------------------------------------------------------------------
 def getDialect(aFile):
 
-    import csv
-    csvDialect = csv.Sniffer().sniff(aFile.readline())
-
-    return csvDialect
+    return csv.Sniffer().sniff(aFile.readline())
 #-------------------------------------------------------------------------
 
-if __name__ == '__main__':
-
 #
-# VARIABLES
+#  METHODS
 #
-
-    import csv
 
 #-------------------------------------------------------------------------
-#
-#  class io
-#
+# csv_to_dict(
+#    filename,
+#    key_func,
+#    value_func,
+#    skip_header
+#    )
 #-------------------------------------------------------------------------
-class io(object):
-    __version__ = 0.2
-
-    #
-    #  METHODS
-    #
-
-    #-------------------------------------------------------------------------
-    # csv_to_dict(
-    #    filename,
-    #    key_func,
-    #    value_func,
-    #    skip_header
-    #    )
-    #-------------------------------------------------------------------------
 def csv_to_dict(filename,
                 key_func,
                 value_func,
@@ -82,16 +63,16 @@ def csv_to_dict(filename,
                 aDict[key] = value_func(row)
 
         return aDict
-    #-------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 
-    #-------------------------------------------------------------------------
-    # csv_to_nested_dict(
-    #    filename,
-    #    key_func,
-    #    skip_header
-    #    )
-    #-------------------------------------------------------------------------
+#-------------------------------------------------------------------------
+# csv_to_nested_dict(
+#    filename,
+#    key_func,
+#    skip_header
+#    )
+#-------------------------------------------------------------------------
 def csv_to_nested_dict(filename,
                        key_func,
                        ordered = False):
@@ -134,53 +115,31 @@ def csv_to_nested_dict(filename,
                     aDict[key] = row
 
         return aDict
-    #-------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 
-    #-------------------------------------------------------------------------
-    # nested_dict_to_csv(
-    #    aNestedDict,
-    #    FileName,
-    #    FirstFieldName
-    #    )
-    #-------------------------------------------------------------------------
-def nested_dict_to_csv(aNestedDict,
-                       FileName,
-                       FirstFieldName = "",
-                       write_header = True,
-                       SubKeys = None):
+#-------------------------------------------------------------------------
+# nested_dict_to_csv(
+#    nested_dict,
+#    file_name,
+#    fields
+#    )
+#-------------------------------------------------------------------------
+def nested_dict_to_csv(nested_dict,file_name,fields='',header=True):
         """
-        Takes an dictionary of dictionaries and outputs it as csv with keys as rownames and subkeys as column names
+        Printes a nested dictionary to csv.
 
         Args:
-            aNestedDict (dict) -- a dictionary of dictionaries
-            FileName (str) -- the name of target file
-            FirstFieldName (str - optional) -- the name of the first column (ie the name for the keys - if none is given,
-                                               the field is empty)
-            write_header (boolean - optional) -- set to False if header should not be written
-            SubKeys (list of strings - optional) -- pass to control in which order the subkeys are printed
-
+            nested_dict (dict) -- a dictionary of dictionaries
+            file_name (str) -- the name of output file
+            fields (list of str) -- the ordering of subkeys with the first entry being the main key
+            header (boolean - optional) -- set to False if header should not be written
         """
-
         import csv
-
-        # get unique names of all subkeys
-        if SubKeys == None:
-            SubKeys = list({subkey for key in aNestedDict.values() for subkey in key})
-
-        # create proper list of field names
-        
-        FieldNames = [FirstFieldName]
-        FieldNames.extend(SubKeys)
-        # output using csv
-        with open(FileName, 'wb') as f:
-            csvWriter = csv.DictWriter(f, fieldnames=FieldNames, lineterminator='\n')
-            if write_header:
-                csvWriter.writeheader()
-            out_rows = []
-            for key, data in aNestedDict.items():
-                row = {FieldNames[0]: key}
-                row.update(data)
-                out_rows.append(row)
-            csvWriter.writerows(out_rows)
-    #-------------------------------------------------------------------------
+        with open(file_name,'w') as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            if header:
+                w.writeheader()
+            for k in nested_dict:
+                w.csvWriter({field: out_dict[k].get(field) or k for field in fields})
+#-------------------------------------------------------------------------

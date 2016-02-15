@@ -171,17 +171,6 @@ class ABMTools(object):
             next(csvReader, None)
             return [row for row in csvReader]
 
-
-    # Reads the CSV file into needed data [multiple dimensions - these are actually the same for our purposes, but in principle could be different]
-    def read_output_mult(self, FileName):
-        with open(FileName, 'r') as f:
-            csvDialect = self.getDialect(f)
-            f.seek(0)
-            csvReader = csv.reader(f, dialect=csvDialect)
-            next(csvReader, None)
-            return [row for row in csvReader]
-
-
     def read_config(self, FileName):
         """
         Reads config file (xml)

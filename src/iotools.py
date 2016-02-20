@@ -8,12 +8,13 @@ A collection of methods for input and outputting data
 import csv
 __author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 __all__ = ['csv_to_dict', 'csv_to_nested_dict', 'nested_dict_to_csv']
-__version__ = 0.3
+__version__ = 0.4
 
-def csv_to_dict(filename,key_func,value_func,skip_header=True):
+
+def csv_to_dict(filename, key_func, value_func, skip_header=True, **kwargs):
     """
     Reads a csv as a dictionary, where values and keys are set
-    in a flexible manner. Delimiters are determined automatically.
+    in a flexible manner.
 
     Parameters
     ----------
@@ -28,9 +29,7 @@ def csv_to_dict(filename,key_func,value_func,skip_header=True):
     """
     aDict = {}
     with open(filename, 'r') as f:
-        dialect = csv.Sniffer().sniff(f.readline())
-        f.seek(0)
-        csvReader = csv.reader(f, dialect=dialect)
+        csvReader = csv.reader(f, **kwargs)
         if skip_header: next(csvReader, None)
         for row in csvReader:
             key = key_func(row)
@@ -38,10 +37,10 @@ def csv_to_dict(filename,key_func,value_func,skip_header=True):
     return aDict
 
 
-def csv_to_nested_dict(filename,key_func,ordered=False):
+def csv_to_nested_dict(filename, key_func, ordered=False, **kwargs):
     """
     Reads a csv as a dictionary of dictionaries, where keys are set
-    in a flexible manner. Delimiters are determined automatically.
+    in a flexible manner.
 
     Parameters
     ----------
@@ -53,11 +52,9 @@ def csv_to_nested_dict(filename,key_func,ordered=False):
     -------
     dictionary object or ordered dictionary object
     """
-    with open(filename,'r') as f:
-        dialect = csv.Sniffer().sniff(f.readline())
-        f.seek(0)
+    with open(filename, 'r') as f:
         if ordered:
-            csvReader = csv.reader(f, dialect=dialect)
+            csvReader = csv.reader(f, **kwargs)
             from collections import OrderedDict
             aDict = OrderedDict()
             fields = next(csvReader)
@@ -66,7 +63,7 @@ def csv_to_nested_dict(filename,key_func,ordered=False):
                 key = key_func(temp)
                 aDict[key] = temp
         else:
-            csvReader = csv.DictReader(f, dialect=dialect)
+            csvReader = csv.DictReader(f, **kwargs)
             aDict = {}
             for row in csvReader:
                 key = key_func(row)
@@ -74,7 +71,7 @@ def csv_to_nested_dict(filename,key_func,ordered=False):
     return aDict
 
 
-def nested_dict_to_csv(nested_dict,file_name,fields='',header=True):
+def nested_dict_to_csv(nested_dict, file_name, fields='', header=True, **kwargs):
     """
     Prints a nested dictionary to csv.
 
@@ -85,9 +82,8 @@ def nested_dict_to_csv(nested_dict,file_name,fields='',header=True):
     fields: the ordering of subkeys with the first entry being the main key (list of str)
     header: set to False if header should not be written (boolean - o)
     """
-    with open(file_name,'w') as f:
-        w = csv.DictWriter(f, fieldnames=fields)
-        if header:
-            w.writeheader()
+    with open(file_name, 'w') as f:
+        w = csv.DictWriter(f, fieldnames=fields, **kwargs)
+        if header: w.writeheader()
         for k in nested_dict:
             w.writerow({field: nested_dict[k].get(field) or k for field in fields})

@@ -8,7 +8,7 @@ A collection of methods for input and outputting data
 import csv
 __author__ = """Michael E. Rose (Michael.Ernst.Rose@gmail.com)"""
 __all__ = ['csv_to_dict', 'csv_to_nested_dict', 'nested_dict_to_csv']
-__version__ = 0.4
+__version__ = 0.5
 
 
 def csv_to_dict(filename, key_func, value_func, skip_header=True, **kwargs):
@@ -85,5 +85,7 @@ def nested_dict_to_csv(nested_dict, file_name, fields='', header=True, **kwargs)
     with open(file_name, 'w') as f:
         w = csv.DictWriter(f, fieldnames=fields, **kwargs)
         if header: w.writeheader()
-        for k in nested_dict:
-            w.writerow({field: nested_dict[k].get(field) or k for field in fields})
+        for k, d in nested_dict.items():
+            out = {fields[0]: k}
+            out.update(d)
+            w.writerow(out)

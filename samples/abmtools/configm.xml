@@ -1,8 +1,0 @@
-<config identifier="test">
-	<parameter type="input" kind="integer" low="1" high="3"></parameter>
-	<parameter type="output" kind="float" low="0.0" high="4.0" target="2.0"></parameter>
-	<parameter type="output" kind="float" low="0.0" high="4.0" target="2.0"></parameter>
-	<parameter type="sweeps" number="10"></parameter>
-	<parameter type="distance" kind="euclid"></parameter>
-	<parameter type="script" name="testm" function="main"></parameter>
-</config>

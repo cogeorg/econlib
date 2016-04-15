@@ -15,7 +15,7 @@ if __name__ == '__main__':
 #
     import sys
 
-    from src.mappingtools import Mapping
+    import src.mappingtools as MT
 
     args = sys.argv
 
@@ -30,12 +30,12 @@ if __name__ == '__main__':
         input_string = args[2]
         redundant_strings_file_name = args[3]
 
-        mapping = Mapping()
+        mapping = MT.Mapping()
 
         redundant_strings = mapping.read_redundant_strings(redundant_strings_file_name)
         standardized_string = mapping.standardize_string(input_string, redundant_strings)
 
-        print "MappingTools version: " + str(mapping.__version__)
+        print "MappingTools version: " + str(MT.__version__)
         print input_string + "  -->  " + standardized_string
 
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     if test_number == "2":
         input_file_name = args[2]
 
-        mapping = Mapping()
+        mapping = MT.Mapping()
 
         input_file = open(input_file_name, 'r')
         # for simplicity every line is a distinct string, but the string array
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
         mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
 
-        print "MappingTools version: " + str(mapping.__version__)
+        print "MappingTools version: " + str(MT.__version__)
         print mapping.from_strings
         print mapping.reduced_from_strings
 
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     if test_number == "3":
         input_file_name = args[2]
 
-        mapping = Mapping()
+        mapping = MT.Mapping()
 
         # first create a reduced string dictionary
         input_file = open(input_file_name, 'r')
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
         mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
 
-        print "MappingTools version: " + str(mapping.__version__)
+        print "MappingTools version: " + str(MT.__version__)
 
         print "<< RUN1: "
         number_of_fuzzy_options = 4
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     if test_number == "4":
         input_file_name = args[2]
 
-        mapping = Mapping()
+        mapping = MT.Mapping()
 
         # first create a reduced string dictionary
         input_file = open(input_file_name, 'r')
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
         mapping.reduced_from_strings = mapping.compute_string_frequency(mapping.from_strings)
 
-        print "MappingTools version: " + str(mapping.__version__)
+        print "MappingTools version: " + str(MT.__version__)
 
         print "<< RUN1: "
         threshold_fuzziness = 80.0
